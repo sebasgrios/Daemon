@@ -3,7 +3,7 @@ import fs from "fs";
 import { dirname } from "path";
 import { fileURLToPath } from "url";
 
-export const getFilesByDir = (folderName: string) => {
+export const getFilesByDir = async (folderName: string) => {
     const files = [];
     const __fileName = fileURLToPath(import.meta.url);
     const __dirname = dirname(__fileName);
@@ -12,7 +12,7 @@ export const getFilesByDir = (folderName: string) => {
 
     for (const file of fileNames) {
         const filePath = path.join(filesPath, file);
-        const command = import(filePath);
+        const command = await import(filePath);
 
         files.push(command);
     }

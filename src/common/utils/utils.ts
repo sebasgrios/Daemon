@@ -9,10 +9,14 @@ export default class Utils {
     }
 
     loadCommands () {
-        const test = getFilesByDir('commands');
-        // TODO: resolve promise returned
-        console.log(test);
+        console.info('[🔄] Loading commands...');
+
+        getFilesByDir('commands')
+        .then(moduleExports => console.log(moduleExports))
+        .catch(error => console.error(`[❌] Utils loadCommands | There was an error getting commands ${error}`));
         
+        // TODO set commands to client and rest
+
         return null;
     }
 }
