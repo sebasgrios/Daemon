@@ -1,0 +1,22 @@
+{
+  "name": "daemon",
+  "version": "1.0.0",
+  "description": "Just a simple Discord bot",
+  "type": "module",
+  "main": "dist/index.ts",
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "start": "tsc && node ."
+  },
+  "keywords": [],
+  "author": "Sebastián González Ríos",
+  "license": "ISC",
+  "dependencies": {
+    "discord.js": "^14.14.1"
+  },
+  "devDependencies": {
+    "@types/node": "^20.12.7",
+    "dotenv": "^16.4.5",
+    "tsx": "^4.7.2"
+  }
+}
