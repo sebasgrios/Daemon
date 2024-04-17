@@ -9,6 +9,7 @@ export default class DiscordClient {
     };
 
     async getClient (): Promise<Client> {
+        console.clear();
         console.info('[🔄] Connecting client...');
 
         const client = new Client({

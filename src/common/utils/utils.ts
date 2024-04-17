@@ -16,7 +16,7 @@ export default class Utils {
             const applicationCommands = this.client.application?.commands;
         
             if (!applicationCommands) {
-                console.error('La aplicación no tiene permisos para gestionar comandos.');
+                console.error(`[❌] App hasn't permissions to read command files`);
                 return;
             }
     
@@ -24,9 +24,9 @@ export default class Utils {
                 applicationCommands.create(command.data);
             });
 
-            console.log('[✅] Todos los comandos cargados correctamente.');
+            console.log(`[✅] Commands loaded`);
             
-            //TOD@ rest api
+            //TODO rest api
             //401
 /*             await new REST({ version: '10' }).setToken('token_example').put(
                 Routes.applicationGuildCommands('client_id', 'guild_id'), {
@@ -34,7 +34,7 @@ export default class Utils {
                 }
             ) */
         } catch (error) {
-            console.error('[❌]Error al cargar uno o varios comandos:', error);
+            console.error(`[❌] There was an error loading commands: ${error}`);
         }
     }
 }

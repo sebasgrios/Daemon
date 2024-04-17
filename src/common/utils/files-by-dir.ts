@@ -9,20 +9,20 @@ export const getFilesByDir = async (folderName: string) => {
     const __dirname = dirname(__fileName);
     const filesPath = path.join(__dirname, `../../${folderName}`);
 
-    // Filtro de subdirectorios
+    // Subdirectories filter
     const directories = fs.readdirSync(filesPath, { withFileTypes: true })
         .filter(dirent => dirent.isDirectory())
         .map(dirent => dirent.name);
 
-    // Recorrido de subdirectorios en busca de comandos
+    // Run every subdirectory looking for commands
     for (const directory of directories) {
         const directoryPath = path.join(filesPath, directory);
         const fileNames = fs.readdirSync(directoryPath).filter((file: string) => file.endsWith('.ts'));
 
         for (const fileName of fileNames) {
             const filePath = path.join(directoryPath, fileName);
-            console.log(`[✅] ${fileName} cargado correctamente`)
-            const command = await import(filePath);
+            const command = await import(filePath); //! Doesnt work!
+            console.log(`[✅] File '${fileName}' loaded`)
             files.push(command);
         }
     }
