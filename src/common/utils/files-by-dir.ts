@@ -3,18 +3,28 @@ import fs from "fs";
 import { dirname } from "path";
 import { fileURLToPath } from "url";
 
-export const getFilesByDir = (folderName: string) => {
-    const files = [];
+export const getFilesByDir = async (folderName: string) => {
+    const files: any[] = [];
     const __fileName = fileURLToPath(import.meta.url);
     const __dirname = dirname(__fileName);
-    const filesPath = path.join(__dirname, `../../${folderName}`);    
-    const fileNames = fs.readdirSync(filesPath).filter((file: String) => file.endsWith('.ts'));    
+    const filesPath = path.join(__dirname, `../../${folderName}`);
 
-    for (const file of fileNames) {
-        const filePath = path.join(filesPath, file);
-        const command = import(filePath);
+    // Filtro de subdirectorios
+    const directories = fs.readdirSync(filesPath, { withFileTypes: true })
+        .filter(dirent => dirent.isDirectory())
+        .map(dirent => dirent.name);
 
-        files.push(command);
+    // Recorrido de subdirectorios en busca de comandos
+    for (const directory of directories) {
+        const directoryPath = path.join(filesPath, directory);
+        const fileNames = fs.readdirSync(directoryPath).filter((file: string) => file.endsWith('.ts'));
+
+        for (const fileName of fileNames) {
+            const filePath = path.join(directoryPath, fileName);
+            console.log(`[✅] ${fileName} cargado correctamente`)
+            const command = await import(filePath);
+            files.push(command);
+        }
     }
 
     return files;

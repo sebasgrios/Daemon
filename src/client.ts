@@ -8,7 +8,7 @@ export default class DiscordClient {
         this.apiConfigService = new ApiConfigService();
     };
 
-    getClient (): Promise<void> {
+    async getClient (): Promise<Client> {
         console.info('[🔄] Connecting client...');
 
         const client = new Client({
@@ -29,10 +29,10 @@ export default class DiscordClient {
             }
         });
 
-        return client.login(this.apiConfigService.discordConfig.token)
+        await client.login(this.apiConfigService.discordConfig.token)
             .then(() => console.info(`[✅] ${client.user?.username} is running`))
             .catch((error: DiscordAPIError) => console.error(`[❌] DiscordClient getClient | There was an error initializating bot: ${error}`));
-    };
 
-    
+        return client;
+    };
 }

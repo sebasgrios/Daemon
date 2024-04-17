@@ -1,5 +1,17 @@
 import DiscordClient from "./client";
 import Utils from "./common/utils/utils";
 
-export const client = new DiscordClient().getClient();
-const utils = new Utils().loadCommands();
+const discordClient = new DiscordClient();
+
+async function start() {
+    const client = await discordClient.getClient(); // Obtener una única instancia del cliente
+
+    const utils = new Utils(client);
+    await utils.loadCommands();
+}
+
+start().catch(error => {
+    console.error('Error al iniciar el bot:', error);
+});
+
+export default discordClient
