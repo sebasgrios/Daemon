@@ -8,9 +8,17 @@
     "dev": "tsx watch src/index.ts",
     "start": "tsc && node ."
   },
-  "keywords": [],
-  "author": "Sebastián González Ríos",
-  "license": "ISC",
+  "contributors": [
+    {
+      "name": "Sebastián González Ríos",
+      "url": "https://www.linkedin.com/in/sgonzari"
+    },
+    {
+      "name": "Hector Escolante Enriquez",
+      "url": "https://www.linkedin.com/in/hector-escolante-enriquez/"
+    }
+  ],
+  "license": "CC-BY-NC-ND-4.0",
   "dependencies": {
     "discord.js": "^14.14.1"
   },
