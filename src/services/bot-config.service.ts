@@ -1,6 +1,8 @@
 import 'dotenv/config';
+import IBotConfigProvider from '../interfaces/bot-config.interface';
+import IDiscordConfig from "../interfaces/discord-config.interface";
 
-export class ApiConfigService {
+export class BotConfigService implements IBotConfigProvider {
     get isDevelopment () {
         return process.env.TZ === 'development';
     };
@@ -20,10 +22,10 @@ export class ApiConfigService {
         return value.toString().replace(/\n/g, '\n');
     };
 
-    get discordConfig () {
+    get discordConfig (): IDiscordConfig {
         return {
             token: this.getString('DISCORD_TOKEN'),
             clientId: this.getString('CLIENT_ID'),
         };
     }
-}
+};
