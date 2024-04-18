@@ -1,9 +1,9 @@
 import { SlashCommandBuilder } from 'discord.js';
 
 export const data = new SlashCommandBuilder()
-    .setName('ping')
-    .setDescription('Ver la latencia del bot');
+    .setName(`ping`)
+    .setDescription(`Shows bot's latency`);
 
-export const run = (client: any, interaction: any) => {
-    interaction.reply({ content: `El ping de Sebas es de ${client.ws.ping} ms` });
+export const execute = (client: any, interaction: any) => {
+    interaction.reply({ content: `The ${client.user.username} latency is: ${client.ws.ping} ms` });
 };

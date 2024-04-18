@@ -9,7 +9,7 @@ export class ApiConfigService {
         return process.env.TZ === 'production';
     };
 
-    private getString (key: string, defaultValue?: string) {
+    private getString (key: string, defaultValue: string = '') : string {
         const value = process.env[key];
         
         if (value === undefined) {
