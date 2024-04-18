@@ -61,8 +61,8 @@ export default class DiscordClient {
                             event.execute(this.client, interaction);
                         });
                     }
-                    console.info(`[✅] Event '${event.data.name}' loaded`)
                 });
+                console.info(`[✅] Events loaded`);
             })
             .catch((error: any) => console.error(`[❌] There was an error loading events: ${error}`));
     };
