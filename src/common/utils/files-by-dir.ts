@@ -21,7 +21,7 @@ export const getFilesByDir = async (folderName: string) => {
 
         for (const fileName of fileNames) {
             const filePath = path.join(directoryPath, fileName);
-            const command = await import(filePath); //! Doesnt work!
+            const command = await import(`file://${filePath}`);
             console.log(`[✅] File '${fileName}' loaded`)
             files.push(command);
         }
