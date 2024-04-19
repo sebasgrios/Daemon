@@ -1,6 +1,6 @@
 import { Client, Events, CommandInteraction } from "discord.js";
-import IEvent from "../interfaces/event.interface";
-import discordClient from "..";
+import IEvent from "../../interfaces/event.interface";
+import discordClient from "../..";
 
 export const task : IEvent = {
     data: {
