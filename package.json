@@ -20,7 +20,8 @@
   ],
   "license": "CC-BY-NC-ND-4.0",
   "dependencies": {
-    "discord.js": "^14.14.1"
+    "@discordjs/voice": "^0.16.1",
+    "discord.js": "^14.14.0"
   },
   "devDependencies": {
     "@types/node": "^20.12.7",
