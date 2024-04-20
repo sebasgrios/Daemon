@@ -13,7 +13,7 @@ import { Client, Guild, VoiceBasedChannel } from 'discord.js'
 import providers from '../providers/bot-config.provider'
 import MusicInterface from './interfaces/music-interface'
 import MusicAdapter from './interfaces/adapter'
-import { ErrorHandler } from '../shared/error-handler'
+import { ErrorHandler } from '../shared/error.handler'
 
 export default class Music implements MusicInterface {
     private token!: string

@@ -4,7 +4,8 @@ import IBotConfigProvider from "../interfaces/bot-config.interface";
 import ICommand from "../interfaces/command.interface";
 import { getCommands } from "../handlers/command.handler";
 import { getEvents } from "../handlers/event.handler";
-import { ErrorHandler } from "../shared/error-handler";
+import { ErrorHandler } from "../shared/error.handler";
+import { InfoHandler } from "../shared/info.handler";
 
 export default class DiscordClient {
     private client: Client;
@@ -19,15 +20,15 @@ export default class DiscordClient {
 
     async getClient(): Promise<void> {
         console.clear();
-        console.info('[🔄] [🤖] Connecting client...');
+        new InfoHandler('🤖', 'Client is connecting...', 'loading');
 
         await this.client.login(this.botConfigProvider.discordConfig.token)
-            .then(() => console.info(`[✅] [🤖] ${this.client.user?.username} is running`))
+            .then(() => new InfoHandler('🤖', `${this.client.user?.username} is running`, 'ok', true))
             .catch((error: DiscordAPIError) => new ErrorHandler('🤖', 'There was an error initializating bot', error));
     };
 
     async loadCommands(): Promise<void> {
-        console.info('\n[🔄] [🤖] Loading commands...');
+        new InfoHandler('🤖', 'Commands are loading...', 'loading');
 
         await getCommands()
             .then(async commands => {
@@ -41,14 +42,14 @@ export default class DiscordClient {
                             body: commands.map(command => command.data.toJSON())
                         }
                     )
-                    .then(() => console.info(`[✅] [🤖] Commands loaded`))
+                    .then(() => new InfoHandler('🤖', 'Commands are loaded', 'ok', true))
                     .catch((error: any) => new ErrorHandler('🤖', 'There was an error loading commands', error));
             })
             .catch((error: any) => new ErrorHandler('🤖', 'There was an error loading commands', error));
     };
 
     async loadEvents(): Promise<void> {
-        console.info('\n[🔄] [🤖] Loading events...');
+        new InfoHandler('🤖', 'Events are loading...', 'loading');
 
         await getEvents()
             .then(async events => {
@@ -63,7 +64,7 @@ export default class DiscordClient {
                         });
                     }
                 });
-                console.info(`[✅] [🤖] Events loaded`);
+                new InfoHandler('🤖', 'Events are loaded', 'ok', true);
             })
             .catch((error: any) => new ErrorHandler('🤖', 'There was an error loading events', error));
     };

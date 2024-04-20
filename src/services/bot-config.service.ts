@@ -1,7 +1,7 @@
 import 'dotenv/config';
 import IBotConfigProvider from '../interfaces/bot-config.interface';
 import IDiscordConfig from "../interfaces/discord-config.interface";
-import { ErrorHandler } from '../shared/error-handler';
+import { ErrorHandler } from '../shared/error.handler';
 
 export class BotConfigService implements IBotConfigProvider {
     get isDevelopment () {

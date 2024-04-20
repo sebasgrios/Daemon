@@ -1,5 +1,5 @@
 import DiscordClient from "./client/client";
-import { ErrorHandler } from "./shared/error-handler";
+import { ErrorHandler } from "./shared/error.handler";
 
 const discordClient = new DiscordClient();
 
