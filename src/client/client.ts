@@ -8,7 +8,7 @@ import { getEvents } from "../handlers/event.handler";
 export default class DiscordClient {
     private client: Client;
     private botConfigProvider: IBotConfigProvider;
-    public commands: Collection<string, ICommand>
+    public commands: Collection<string, ICommand>;
 
     constructor() {
         this.client = new Client(providers.clientConfigProvider);
