@@ -1,6 +1,7 @@
 import 'dotenv/config';
 import IBotConfigProvider from '../interfaces/bot-config.interface';
 import IDiscordConfig from "../interfaces/discord-config.interface";
+import { ErrorHandler } from '../shared/error-handler';
 
 export class BotConfigService implements IBotConfigProvider {
     get isDevelopment () {
@@ -15,7 +16,7 @@ export class BotConfigService implements IBotConfigProvider {
         const value = process.env[key];
         
         if (value === undefined) {
-            console.error(`[❌] ApiConfigService getString | There was an error founding ${key} key`);
+            new ErrorHandler('🤖', `There was an error getting a key`, `Key ${key} not found.`);
             return defaultValue?.toString().replace(/\n/g, '\n');
         }
 

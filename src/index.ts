@@ -1,4 +1,5 @@
 import DiscordClient from "./client/client";
+import { ErrorHandler } from "./shared/error-handler";
 
 const discordClient = new DiscordClient();
 
@@ -9,7 +10,7 @@ const start = async () => {
 };
 
 start().catch(error =>
-    console.error(`[❌] There was an error starting the bot: ${error}`)
+    new ErrorHandler('🤖', 'There was an error starting the bot', error)
 );
 
 export default discordClient;

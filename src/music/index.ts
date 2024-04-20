@@ -42,7 +42,7 @@ export default class Music implements MusicInterface {
             return connection
         } catch (error) {
             connection.destroy()
-            new ErrorHandler('[🎶]', 'MUSIC ERROR', error)
+            new ErrorHandler('🎶', 'There was an error connecting to channel', error)
         }
     }
 

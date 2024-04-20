@@ -4,6 +4,7 @@ export class ErrorHandler {
         private errorMessage: string, 
         private error: unknown
     ) {
-        console.error(`[${this.icon}] ${this.errorMessage}:`, this.error);
+        console.error(`[❌] [${this.icon}] ${this.errorMessage}:`);
+        console.error(this.error);
     }
 }
