@@ -7,7 +7,7 @@ import skipButton from "../../component/buttons/skip.button";
 import volumeUpButton from "../../component/buttons/volume-up.button";
 import playButton from "../../component/buttons/play.button";
 
-export const task: ICommand = {
+const playCommand: ICommand = {
     data: new SlashCommandBuilder()
         .setName('play')
         .setDescription('play a song')
@@ -110,3 +110,5 @@ export const task: ICommand = {
         
     }
 };
+
+export default playCommand;

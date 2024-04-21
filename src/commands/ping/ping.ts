@@ -15,7 +15,7 @@ const getColorByPing = (ping: number): ColorResolvable => {
     return [0, 0, 0];
 };
 
-export const task: ICommand = {
+const pingCommand: ICommand = {
     data: new SlashCommandBuilder()
         .setName('ping')
         .setDescription('Shows bot\'s latency'),
@@ -29,3 +29,5 @@ export const task: ICommand = {
         interaction.reply({ embeds: [embed] });
     }
 };
+
+export default pingCommand;

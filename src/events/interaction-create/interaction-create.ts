@@ -2,7 +2,7 @@ import { Client, Events, CommandInteraction } from "discord.js";
 import IEvent from "../../interfaces/event.interface";
 import discordClient from "../..";
 
-export const task : IEvent = {
+const interactionCreateEvent : IEvent = {
     data: {
         name: Events.InteractionCreate,
         once: false,
@@ -15,3 +15,5 @@ export const task : IEvent = {
         command.run(client, interaction);
     }
 };
+
+export default interactionCreateEvent;

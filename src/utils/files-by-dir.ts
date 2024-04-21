@@ -19,10 +19,10 @@ export const getFilesByDir = async (folderName: string): Promise<any[]> => {
     for (const file of files) {
         const filePath = join(file.path, `${file.name}`);
 
-        const { task } = await import(`file://${filePath}`);
+        const fileContent = await import(`file://${filePath}`);
 
         try {
-            fileCollection.push(task)
+            fileCollection.push(fileContent.default)
             // fileCollection.set(task.data.name, task);
             new InfoHandler('📂', `'${file.name}' file loaded`, 'ok');
         } catch (error) {

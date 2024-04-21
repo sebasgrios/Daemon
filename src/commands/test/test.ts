@@ -1,7 +1,7 @@
 import { APIActionRowComponent, APIMessageActionRowComponent, ActionRowBuilder, ButtonBuilder, ButtonStyle, Client, CommandInteraction, EmbedBuilder, GuildMember, SlashCommandBuilder, SlashCommandStringOption } from "discord.js";
 import ICommand from "../../interfaces/command.interface";
 
-export const task: ICommand = {
+const testCommand: ICommand = {
     data: new SlashCommandBuilder()
         .setName('test')
         .setDescription('command to test SlashCommand functionallities')
@@ -62,3 +62,5 @@ export const task: ICommand = {
         });
     }
 };
+
+export default testCommand;

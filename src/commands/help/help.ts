@@ -1,7 +1,7 @@
 import { Client, CommandInteraction, EmbedBuilder, SlashCommandBuilder } from 'discord.js';
 import ICommand from '../../interfaces/command.interface';
 
-export const task: ICommand = {
+const helpCommand: ICommand = {
     data: new SlashCommandBuilder()
         .setName('help')
         .setDescription('Shows all commands'),
@@ -14,3 +14,5 @@ export const task: ICommand = {
         interaction.reply({ embeds: [embed] });
     }
 };
+
+export default helpCommand;
