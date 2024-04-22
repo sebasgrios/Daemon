@@ -6,6 +6,8 @@ import backButton from "../../component/buttons/back.button";
 import skipButton from "../../component/buttons/skip.button";
 import volumeUpButton from "../../component/buttons/volume-up.button";
 import playButton from "../../component/buttons/play.button";
+import notInVoiceChat from "../../component/embed/not-voice-chat.embed";
+import musicInfo from "../../component/embed/music-info.embed";
 
 const playCommand: ICommand = {
     data: new SlashCommandBuilder()
@@ -19,24 +21,13 @@ const playCommand: ICommand = {
         )),
     run: async (client: Client, interaction: CommandInteraction) => {
         const member: GuildMember = (interaction.member as GuildMember);
-        const query = interaction.options.get('query');
-        const embed = new EmbedBuilder();
 
         if (!member.voice.channel) {
-            embed.setColor('Red')
-                .setTitle('❌ You aren\'t in a voice channel')
-        }
-
-        embed.setColor('Green')
-            .setTitle(`Playing: ${query?.value}`)
-            .setAuthor({
-                name: `${member.nickname} played a song`,
-                iconURL: `${interaction.user.avatarURL()}`
-            })
-            .setTimestamp()
-            .setFooter({
-                text: `Queue length: ${1}`
+            interaction.reply({
+                embeds: [notInVoiceChat(client, interaction)]
             });
+            return;
+        }
 
         const buttonGroup = new ActionRowBuilder<ButtonBuilder>()
             .addComponents(
@@ -50,30 +41,19 @@ const playCommand: ICommand = {
 
 
         const reply = await interaction.reply({
-            embeds: [embed],
+            embeds: [musicInfo(client, interaction, 'play')],
             components: [buttonGroup]
         });
 
         // TODO automate this with a method in each button doing is func
         // Create a collector (is like a listener) to listen client interactions with buttons
-        
+
         const collector = reply.createMessageComponentCollector({
             componentType: ComponentType.Button
         });
 
-        collector.on('collect', (interaction: MessageComponentInteraction) => {
-            if (interaction.customId === 'pause-button') {
-                embed.setColor('Red')
-                    .setTitle(`Playing: ${query?.value}`)
-                    .setAuthor({
-                        name: `${member.nickname} paused a song`,
-                        iconURL: `${interaction.user.avatarURL()}`
-                    })
-                    .setTimestamp()
-                    .setFooter({
-                        text: `Queue length: ${1}`
-                    });
-
+        collector.on('collect', (interactionCollector: MessageComponentInteraction) => {
+            if (interactionCollector.customId === 'pause-button') {
                 const buttonGroup2 = new ActionRowBuilder<ButtonBuilder>()
                     .addComponents(
                         volumeDownButton,
@@ -83,31 +63,20 @@ const playCommand: ICommand = {
                         volumeUpButton
                     );
 
-                interaction.update({
-                    embeds: [embed],
+                interactionCollector.update({
+                    embeds: [musicInfo(client, interaction, 'pause')],
                     components: [buttonGroup2]
                 });
             }
 
-            if (interaction.customId === 'play-button') {
-                embed.setColor('Green')
-                    .setTitle(`Playing: ${query?.value}`)
-                    .setAuthor({
-                        name: `${member.nickname} played a song`,
-                        iconURL: `${interaction.user.avatarURL()}`
-                    })
-                    .setTimestamp()
-                    .setFooter({
-                        text: `Queue length: ${1}`
-                    });
-
-                interaction.update({
-                    embeds: [embed],
+            if (interactionCollector.customId === 'play-button') {
+                interactionCollector.update({
+                    embeds: [musicInfo(client, interaction, 'play')],
                     components: [buttonGroup]
                 });
             }
         });
-        
+
     }
 };
 
