@@ -1,6 +1,21 @@
-import { ButtonBuilder, ButtonStyle } from "discord.js";
+import { ButtonStyle, MessageComponentInteraction } from "discord.js";
+import Button from "./button";
 
-export default new ButtonBuilder()
-    .setCustomId('volume_up-button')
-    .setLabel('🔊')
-    .setStyle(ButtonStyle.Secondary);
+export default class VolumeUpButton extends Button {
+    constructor(
+        customId: string = 'volume_up-button',
+        label: string = '🔊',
+        style: ButtonStyle = ButtonStyle.Secondary
+    ) {
+        super(customId, label, style);
+    }
+
+    async execute(interactionCollector: MessageComponentInteraction): Promise<void> {
+        // interactionCollector.update({
+        //     embeds: [musicInfo(client, interaction, 'pause')],
+        //     components: [pauseGroupButton]
+        // });
+        
+        interactionCollector.reply('gonna volume up the song');
+    }
+}
