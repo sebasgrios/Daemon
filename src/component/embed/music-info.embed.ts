@@ -32,7 +32,7 @@ const musicInfo = (client: Client, interaction: CommandInteraction, status: stri
         .setColor(getColorByStatus(status))
         .setTitle(`${query?.value}`)
         .setAuthor({
-            name: `${member.nickname} ${getStatus(status)} a song`,
+            name: `${member.nickname ?? interaction.user.username} ${getStatus(status)} a song`,
             iconURL: `${interaction.user.avatarURL()}`
         })
         .setTimestamp()
