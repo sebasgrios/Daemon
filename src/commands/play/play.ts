@@ -4,6 +4,7 @@ import notInVoiceChat from "../../component/embed/not-voice-chat.embed";
 import musicInfo from "../../component/embed/music-info.embed";
 import playGroupButton from "../../component/buttons/play-group.button";
 import { handleButtonAction } from "../../component/buttons/handlers/button.handler";
+import Music from "../../music";
 
 const playCommand: ICommand = {
     data: new SlashCommandBuilder()
@@ -30,8 +31,11 @@ const playCommand: ICommand = {
             components: [playGroupButton]
         });
 
-        // TODO Refactor collector
+        const music = new Music();
 
+        music.playSong(member.voice.channel);
+        
+        // TODO Refactor collector
         const collector = reply.createMessageComponentCollector({
             componentType: ComponentType.Button
         });
