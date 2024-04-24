@@ -1,50 +1,65 @@
 import {
-	joinVoiceChannel,
-	createAudioPlayer,
-	createAudioResource,
-	entersState,
-	StreamType,
-	AudioPlayerStatus,
-	VoiceConnectionStatus,
+    joinVoiceChannel,
+    createAudioPlayer,
+    createAudioResource,
+    entersState,
+    StreamType,
+    AudioPlayerStatus,
+    VoiceConnectionStatus,
     AudioPlayer,
+    NoSubscriberBehavior,
 } from '@discordjs/voice'
-import { GatewayIntentBits } from 'discord-api-types/v9'
 import { Client, Guild, VoiceBasedChannel } from 'discord.js'
-import providers from '../providers/bot-config.provider'
 import MusicInterface from './interfaces/music-interface'
-import MusicAdapter from './interfaces/adapter'
 import { ErrorHandler } from '../shared/error.handler'
 
 export default class Music implements MusicInterface {
-    private token!: string
-    private player: AudioPlayer
-    private musicAdapter!: MusicAdapter
-    
-    constructor (
-        private channel: VoiceBasedChannel,
-        private guild: Guild
-    ) {
-        this.token = providers.BotConfigProvider.discordConfig.token;
-        this.player = createAudioPlayer()
-        this.musicAdapter = new MusicAdapter(channel, guild)
-    }
 
-    async connectToChannel(channel: VoiceBasedChannel) {
+    constructor() {}
+
+    async playSong(channel: VoiceBasedChannel) {
+
         const connection = joinVoiceChannel({
             channelId: channel.id,
             guildId: channel.guild.id,
-            adapterCreator: this.musicAdapter.createDiscordJSAdapter(this.channel)
-        })
-
-        try {
-            await entersState(connection, VoiceConnectionStatus.Ready, 30_000)
-
-            return connection
-        } catch (error) {
-            connection.destroy()
-            new ErrorHandler('🎶', 'There was an error connecting to channel', error)
-        }
+            adapterCreator: channel.guild.voiceAdapterCreator
+        });
+    
+        const player = createAudioPlayer({
+            behaviors: {
+                noSubscriber: NoSubscriberBehavior.Pause
+            }
+        });
+    
+        connection.subscribe(player);
+    
+        const resource = createAudioResource('https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3', {
+            inputType: StreamType.Arbitrary
+        });
+    
+        player.play(resource);
+    
+        player.on('error', error => {
+            new ErrorHandler('[🎶]', 'Error cargando la canción', error)
+        });
+    
+        player.on(AudioPlayerStatus.Playing, () => {
+            console.log('Audio player is playing.');
+        });
+    
+        player.on(AudioPlayerStatus.Idle, () => {
+            console.log('Audio player is idle.');
+        });
+    
+        return new Promise<void>((resolve, reject) => {
+            player.once(AudioPlayerStatus.Idle, () => {
+                resolve();
+            });
+    
+            player.once('error', (error) => {
+                reject(error);
+            });
+        });
     }
-
 
 }

@@ -8,6 +8,7 @@ import volumeUpButton from "../../component/buttons/volume-up.button";
 import playButton from "../../component/buttons/play.button";
 import notInVoiceChat from "../../component/embed/not-voice-chat.embed";
 import musicInfo from "../../component/embed/music-info.embed";
+import Music from "../../music";
 
 const playCommand: ICommand = {
     data: new SlashCommandBuilder()
@@ -45,6 +46,10 @@ const playCommand: ICommand = {
             components: [buttonGroup]
         });
 
+        const music = new Music();
+
+        music.playSong(member.voice.channel);
+        
         // TODO automate this with a method in each button doing is func
         // Create a collector (is like a listener) to listen client interactions with buttons
 
