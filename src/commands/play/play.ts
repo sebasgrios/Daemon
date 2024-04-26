@@ -1,4 +1,4 @@
-import { Client, CommandInteraction, ComponentType, GuildMember, MessageComponentInteraction, SlashCommandBuilder, SlashCommandStringOption } from "discord.js";
+import { Client, CommandInteraction, CommandInteractionOptionResolver, ComponentType, GuildMember, MessageComponentInteraction, SlashCommandBuilder, SlashCommandStringOption } from "discord.js";
 import ICommand from "../../interfaces/command.interface";
 import notInVoiceChat from "../../component/embed/not-voice-chat.embed";
 import musicInfo from "../../component/embed/music-info.embed";
@@ -31,9 +31,15 @@ const playCommand: ICommand = {
             components: [playGroupButton]
         });
 
+        //Query + music
+        const query: string | null = (interaction.options as CommandInteractionOptionResolver).getString('query');
+
+        if (!query) return; //TOD@ response message
+
         const music = new Music();
 
-        music.playSong(member.voice.channel);
+        music.playSong(member.voice.channel, query);
+        //End Query + music
         
         // TODO Refactor collector
         const collector = reply.createMessageComponentCollector({
