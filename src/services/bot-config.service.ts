@@ -29,4 +29,10 @@ export class BotConfigService implements IBotConfigProvider {
             clientId: this.getString('CLIENT_ID'),
         };
     }
+
+    get youtubeConfig () {
+        return {
+            apiKey: this.getString('YOUTUBE_API_KEY')
+        }
+    }
 };

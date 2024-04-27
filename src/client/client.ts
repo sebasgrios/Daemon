@@ -6,9 +6,11 @@ import { getCommands } from "../handlers/command.handler";
 import { getEvents } from "../handlers/event.handler";
 import { ErrorHandler } from "../shared/error.handler";
 import { InfoHandler } from "../shared/info.handler";
+import ExtendedClient from "./extended-client.interface";
+import MusicModule from "../music/music.module";
 
 export default class DiscordClient {
-    private client: Client;
+    private client: ExtendedClient;
     private botConfigProvider: IBotConfigProvider;
     public commands: Collection<string, ICommand>;
 
@@ -16,6 +18,7 @@ export default class DiscordClient {
         this.client = new Client(providers.clientConfigProvider);
         this.botConfigProvider = providers.BotConfigProvider;
         this.commands = new Collection<string, ICommand>;
+        new MusicModule(this.client)
     };
 
     async getClient(): Promise<void> {

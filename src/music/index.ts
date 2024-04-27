@@ -2,26 +2,28 @@ import {
     joinVoiceChannel,
     createAudioPlayer,
     createAudioResource,
-    entersState,
     StreamType,
     AudioPlayerStatus,
-    VoiceConnectionStatus,
-    AudioPlayer,
     NoSubscriberBehavior,
 } from '@discordjs/voice'
-import { Client, Guild, VoiceBasedChannel } from 'discord.js'
+import { VoiceBasedChannel } from 'discord.js'
 import MusicInterface from './interfaces/music-interface'
 import { ErrorHandler } from '../shared/error.handler'
+import YoutubeHandler from './apis/youtube/youtube';
+import ytdDiscord from 'ytdl-core-discord'
+import { Readable } from 'stream';
 
-export default class Music implements MusicInterface {
-
-    //https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3
-    private queue: string[];
+export default class Music  implements MusicInterface {
+    private queue: Readable[];
     private isPlaying: boolean;
+    private readonly youtubeHandler: YoutubeHandler;
+    private player: any; // Aquí guardaremos una referencia al reproductor de audio
 
     constructor() {
         this.queue = [];
         this.isPlaying = false;
+        this.youtubeHandler = new YoutubeHandler();
+        this.player = createAudioPlayer();
     }
 
     private async playNextSong(channel: VoiceBasedChannel) {
@@ -33,44 +35,51 @@ export default class Music implements MusicInterface {
         const connection = joinVoiceChannel({
             channelId: channel.id,
             guildId: channel.guild.id,
-            adapterCreator: channel.guild.voiceAdapterCreator
+            adapterCreator: channel.guild.voiceAdapterCreator,
         });
 
-        const player = createAudioPlayer({
-            behaviors: {
-                noSubscriber: NoSubscriberBehavior.Pause
-            }
-        });
-
-        connection.subscribe(player);
+        connection.subscribe(this.player);
 
         const resource = createAudioResource(this.queue.shift()!, {
-            inputType: StreamType.Arbitrary
+            inputType: StreamType.Opus,
         });
 
-        player.play(resource);
+        this.player.play(resource);
 
-        player.on('error', error => {
+        this.player.on('error', (error: any) => {
             new ErrorHandler('[🎶]', 'Error cargando la canción', error);
             this.playNextSong(channel);
         });
 
-        player.once(AudioPlayerStatus.Idle, () => {
-            console.log('Audio player is idle.');
+        this.player.once(AudioPlayerStatus.Idle, () => {
             this.playNextSong(channel);
         });
     }
 
-    private async addToQueue(query: string) {
+    private async addToQueue(query: Readable) {
         this.queue.push(query);
     }
 
     async playSong(channel: VoiceBasedChannel, query: string) {
-        await this.addToQueue(query);
+        const song = await this.youtubeHandler.search(query);
+
+        if (!song) return;
+
+        const stream = await ytdDiscord(song.url, { highWaterMark: 1 << 25 });
+
+        await this.addToQueue(stream);
 
         if (!this.isPlaying) {
             this.isPlaying = true;
             this.playNextSong(channel);
         }
+    }
+
+    async pauseSong() {
+        this.player.pause();
+    }
+
+    async resumeSong() {
+        this.player.unpause();
     }
 }

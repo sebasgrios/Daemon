@@ -4,7 +4,7 @@ import notInVoiceChat from "../../component/embed/not-voice-chat.embed";
 import musicInfo from "../../component/embed/music-info.embed";
 import playGroupButton from "../../component/buttons/play-group.button";
 import { handleButtonAction } from "../../component/buttons/handlers/button.handler";
-import Music from "../../music";
+import { musicClient } from "../..";
 
 const playCommand: ICommand = {
     data: new SlashCommandBuilder()
@@ -36,9 +36,7 @@ const playCommand: ICommand = {
 
         if (!query) return; //TOD@ response message
 
-        const music = new Music();
-
-        music.playSong(member.voice.channel, query);
+        musicClient.playSong(member.voice.channel, query);
         //End Query + music
         
         // TODO Refactor collector
