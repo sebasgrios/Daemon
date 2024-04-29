@@ -25,6 +25,7 @@ export default class YoutubeModule {
                 q: query,
                 maxResults: 3,
                 part: ['snippet'],
+                regionCode: 'es',
             });
 
             return videos.data.items;
