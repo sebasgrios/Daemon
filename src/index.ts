@@ -3,7 +3,7 @@ import Music from "./music";
 import { ErrorHandler } from "./shared/error.handler";
 
 const discordClient = new DiscordClient();
-export const musicClient = new Music()
+export const musicClient = new Music();
 
 const start = async () => {
     await discordClient.getClient(); // Get an unique client instance

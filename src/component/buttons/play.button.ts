@@ -1,5 +1,10 @@
-import { ButtonStyle, MessageComponentInteraction } from "discord.js";
+import { ButtonStyle, CommandInteraction, MessageComponentInteraction } from "discord.js";
+import { musicClient } from "../..";
+import { MusicMemoryOptions, MusicMemoryStatusOptions } from "../../music/music.module";
 import Button from "./button";
+import ExtendedClient from "../../client/extended-client.interface";
+import musicInfo from "../embed/music-info.embed";
+import playGroupButton from "./play-group.button";
 
 export default class PlayButton extends Button {
     constructor(
@@ -10,12 +15,14 @@ export default class PlayButton extends Button {
         super(customId, label, style);
     }
 
-    async execute(interactionCollector: MessageComponentInteraction): Promise<void> {
-        // interactionCollector.update({
-        //     embeds: [musicInfo(client, interaction, 'play')],
-        //     components: [playGroupButton]
-        // });
+    async execute(client: ExtendedClient, interaction: CommandInteraction, interactionCollector: MessageComponentInteraction): Promise<void> {
+        musicClient.resumeSong();
 
-        interactionCollector.reply('gonna play the song');
+        client.music?.set(MusicMemoryOptions.status, MusicMemoryStatusOptions.play);
+
+        interactionCollector.update({
+            embeds: [musicInfo(client, interaction, 'play')],
+            components: [playGroupButton]
+        });
     }
 }

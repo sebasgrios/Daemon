@@ -1,8 +1,10 @@
-import { ButtonStyle, MessageComponentInteraction } from "discord.js";
-import Button from "./button";
+import { ButtonStyle, CommandInteraction, MessageComponentInteraction } from "discord.js";
 import { musicClient } from "../..";
-import ExtendedClient from "../../client/extended-client.interface";
 import { MusicMemoryOptions, MusicMemoryStatusOptions } from "../../music/music.module";
+import Button from "./button";
+import ExtendedClient from "../../client/extended-client.interface";
+import musicInfo from "../embed/music-info.embed";
+import pauseGroupButton from "./pause-group.button";
 
 export default class PauseButton extends Button {
     constructor(
@@ -13,27 +15,14 @@ export default class PauseButton extends Button {
         super(customId, label, style);
     }
 
-    async execute(client: ExtendedClient, interactionCollector: MessageComponentInteraction): Promise<void> {
-        // interactionCollector.update({
-        //     embeds: [musicInfo(client, interaction, 'pause')],
-        //     components: [pauseGroupButton]
-        // });
+    async execute(client: ExtendedClient, interaction: CommandInteraction, interactionCollector: MessageComponentInteraction): Promise<void> {
+        musicClient.pauseSong();
 
-        musicClient.pauseSong()
+        client.music?.set(MusicMemoryOptions.status, MusicMemoryStatusOptions.pause);
         
-        console.log('CLIENT', client)
-        const status = client.music?.get(MusicMemoryOptions.status)
-
-        if (status === MusicMemoryStatusOptions.play) {
-            client.music?.set(MusicMemoryOptions.status, MusicMemoryStatusOptions.pause)
-            musicClient.pauseSong()
-            interactionCollector.reply('You paused the song')
-            return;
-        }
-
-        client.music?.set(MusicMemoryOptions.status, MusicMemoryStatusOptions.play)
-        musicClient.resumeSong()
-        interactionCollector.reply('You played the song again')
-        return;
+        interactionCollector.update({
+            embeds: [musicInfo(client, interaction, 'pause')],
+            components: [pauseGroupButton]
+        });
     }
 }

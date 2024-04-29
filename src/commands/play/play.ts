@@ -22,15 +22,11 @@ const playCommand: ICommand = {
 
         if (!member.voice.channel) {
             interaction.reply({
-                embeds: [notInVoiceChat(client, interaction)]
+                embeds: [notInVoiceChat(client, interaction)],
+                ephemeral: true
             });
             return;
         }
-
-        const reply = await interaction.reply({
-            embeds: [musicInfo(client, interaction, 'play')],
-            components: [playGroupButton]
-        });
 
         // Query + music
         const query: string | null = (interaction.options as CommandInteractionOptionResolver).getString('query');
@@ -38,7 +34,7 @@ const playCommand: ICommand = {
         if (!query) return; // TODO: Respuesta del mensaje
 
         try {
-            await musicClient.playSong(member.voice.channel, query);
+            const song = await musicClient.playSong(member.voice.channel, query);
         } catch (error: any) {
             switch (error.constructor) {
                 case SongNotFoundException:
@@ -51,7 +47,12 @@ const playCommand: ICommand = {
             }
             return;
         }
-        // End Query + music
+        // End Query + music        
+
+        const reply = await interaction.reply({
+            embeds: [musicInfo(client, interaction, 'play')],
+            components: [playGroupButton]
+        });
 
         // TODO: Refactor collector
         const collector = reply.createMessageComponentCollector({
@@ -59,11 +60,9 @@ const playCommand: ICommand = {
         });
 
         collector.on('collect', (interactionCollector: MessageComponentInteraction) => {
-            handleButtonAction(interactionCollector);
+            handleButtonAction(client, interaction, interactionCollector);
         });
     }
-
-
 };
 
 export default playCommand;
