@@ -18,12 +18,12 @@ const getColorByPing = (ping: number): ColorResolvable => {
 const pingCommand: ICommand = {
     data: new SlashCommandBuilder()
         .setName('ping')
-        .setDescription('Shows bot\'s latency'),
+        .setDescription('Muestra la latencia del servidor'),
     run: async (client: Client, interaction: CommandInteraction) => {
         const embed = new EmbedBuilder()
             .setColor(getColorByPing(client.ws.ping))
-            .setTitle('Latency')
-            .setDescription(`The latency of ${client.user?.username} is: ${client.ws.ping} ms`);
+            .setTitle('Latencia')
+            .setDescription(`La latencia de **${client.user?.username}** es de **${client.ws.ping}ms**`);
 
 
         interaction.reply({ embeds: [embed] });

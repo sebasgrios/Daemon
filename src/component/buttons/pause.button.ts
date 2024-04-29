@@ -5,6 +5,7 @@ import Button from "./button";
 import ExtendedClient from "../../client/extended-client.interface";
 import musicInfo from "../embed/music-info.embed";
 import pauseGroupButton from "./pause-group.button";
+import { InfoToCommand } from "../../music/interfaces/music-interface";
 
 export default class PauseButton extends Button {
     constructor(
@@ -15,13 +16,13 @@ export default class PauseButton extends Button {
         super(customId, label, style);
     }
 
-    async execute(client: ExtendedClient, interaction: CommandInteraction, interactionCollector: MessageComponentInteraction): Promise<void> {
+    async execute(song: InfoToCommand, client: ExtendedClient, interaction: CommandInteraction, interactionCollector: MessageComponentInteraction): Promise<void> {
         musicClient.pauseSong();
 
         client.music?.set(MusicMemoryOptions.status, MusicMemoryStatusOptions.pause);
         
         interactionCollector.update({
-            embeds: [musicInfo(client, interaction, 'pause')],
+            embeds: [musicInfo(song, interactionCollector, 'pause')],
             components: [pauseGroupButton]
         });
     }

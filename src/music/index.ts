@@ -29,6 +29,10 @@ export default class Music implements MusicInterface {
         this.player = createAudioPlayer()
     }
 
+    public getIsPlaying(): boolean {
+        return this.isPlaying;
+    }
+
     private async playNextSong(channel: VoiceBasedChannel) {
         if (this.queue.length === 0) {
             this.isPlaying = false
@@ -70,7 +74,7 @@ export default class Music implements MusicInterface {
         const song = await this.youtubeHandler.search(query)
 
         if (!song) {
-            throw new SongNotFoundException(`No song found for query ${query}`);
+            throw new SongNotFoundException(`No se ha encontrado la canción: \`${query}\``);
         };    
 
         const stream = await ytdDiscord(song.url, { highWaterMark: 1 << 25 })

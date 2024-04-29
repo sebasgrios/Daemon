@@ -8,16 +8,19 @@ import { ErrorHandler } from "../shared/error.handler";
 import { InfoHandler } from "../shared/info.handler";
 import ExtendedClient from "./extended-client.interface";
 import MusicModule from "../music/music.module";
+import SongResultInterface from "../music/interfaces/song-results.interface";
 
 export default class DiscordClient {
     private client: ExtendedClient;
     private botConfigProvider: IBotConfigProvider;
     public commands: Collection<string, ICommand>;
+    public song: SongResultInterface | null;
 
     constructor() {
         this.client = new Client(providers.clientConfigProvider);
         this.botConfigProvider = providers.BotConfigProvider;
         this.commands = new Collection<string, ICommand>;
+        this.song = null;
         new MusicModule(this.client)
     };
 
@@ -36,7 +39,7 @@ export default class DiscordClient {
         await getCommands()
             .then(async commands => {
                 this.commands = commands;
-                
+
                 await new REST({ version: '10' })
                     .setToken(this.botConfigProvider.discordConfig.token)
                     .put(

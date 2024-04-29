@@ -1,4 +1,6 @@
-import { Client, ColorResolvable, CommandInteraction, EmbedBuilder, GuildMember } from "discord.js";
+import { ColorResolvable, CommandInteraction, EmbedBuilder, GuildMember, MessageComponentInteraction } from "discord.js";
+import { InfoToCommand } from "../../music/interfaces/music-interface";
+import { getBestImage, getDurationSong } from "./utils";
 
 const getColorByStatus = (status: string): ColorResolvable => {
     if (status === 'play') {
@@ -14,31 +16,34 @@ const getColorByStatus = (status: string): ColorResolvable => {
 
 const getStatus = (status: string): string => {
     if (status === 'play') {
-        return 'played';
+        return 'puso';
     }
 
     if (status === 'pause') {
-        return 'paused';
+        return 'pausó';
     }
 
     return '';
 };
 
-const musicInfo = (client: Client, interaction: CommandInteraction, status: string): EmbedBuilder => {
+const musicInfo = (songData: InfoToCommand, interaction: CommandInteraction | MessageComponentInteraction, status: string): EmbedBuilder => {
+    const { song, queue } = songData;
     const member: GuildMember = (interaction.member as GuildMember);
-    const query = interaction.options.get('query');
 
     return new EmbedBuilder()
         .setColor(getColorByStatus(status))
-        .setTitle(`${query?.value}`)
+        .setTitle(`${song.title}`)
+        .setURL(`${song.url}`)
         .setAuthor({
-            name: `${member.nickname ?? interaction.user.username} ${getStatus(status)} a song`,
+            name: `${member.nickname ?? interaction.user.username} ${getStatus(status)} una canción`,
             iconURL: `${interaction.user.avatarURL()}`
         })
-        .setTimestamp()
-        .setFooter({
-            text: `Queue length: ${1}`
-        });
+        .setImage(getBestImage(song.thumbnail))
+        .addFields(
+            { name: 'Solicitada por', value: `${member.nickname ?? interaction.user.username}`, inline: true },
+            { name: 'Duración', value: `${getDurationSong(parseInt(song.duration))}`, inline: true }
+        )
+        .setTimestamp();
 };
 
 export default musicInfo;

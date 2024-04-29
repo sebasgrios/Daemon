@@ -1,6 +1,6 @@
 import { SearchElements } from "../apis/youtube/youtube";
 
-interface Thumbnail {
+export interface Thumbnail {
     url: string
     width: number
     height: number

@@ -1,41 +1,68 @@
 import { Client, CommandInteraction, CommandInteractionOptionResolver, ComponentType, GuildMember, MessageComponentInteraction, SlashCommandBuilder, SlashCommandStringOption } from "discord.js";
 import ICommand from "../../interfaces/command.interface";
-import notInVoiceChat from "../../component/embed/not-voice-chat.embed";
+import error from "../../component/embed/error.embed";
 import musicInfo from "../../component/embed/music-info.embed";
 import playGroupButton from "../../component/buttons/play-group.button";
 import { handleButtonAction } from "../../component/buttons/handlers/button.handler";
 import { musicClient } from "../..";
 import SongNotFoundException from "../../music/apis/exceptions/song-not-found.exception";
 import { InfoToCommand } from "../../music/interfaces/music-interface";
+import musicQueue from "../../component/embed/music-queue.embed";
 
 const playCommand: ICommand = {
     data: new SlashCommandBuilder()
         .setName('play')
-        .setDescription('play a song')
+        .setDescription('Reproduce música')
         .addStringOption((option: SlashCommandStringOption): SlashCommandStringOption => (
             option
                 .setName('query')
-                .setDescription('add name/url of song')
+                .setDescription('añade el nombre/url de la canción')
                 .setRequired(true)
         )),
     run: async (client: Client, interaction: CommandInteraction) => {
         const member: GuildMember = (interaction.member as GuildMember);
+        const isPlaying = musicClient.getIsPlaying();
 
         if (!member.voice.channel) {
             interaction.reply({
-                embeds: [notInVoiceChat(client, interaction)],
+                embeds: [error('No estás en un canal de voz')],
                 ephemeral: true
             });
             return;
         }
 
-        // Query + music
         const query: string | null = (interaction.options as CommandInteractionOptionResolver).getString('query');
 
-        if (!query) return; // TODO: Respuesta del mensaje
+        if (!query) {
+            interaction.reply({
+                embeds: [error('Falta el parámetro "query"')],
+                ephemeral: true
+            });
+            return;
+        }
 
         try {
             const { song, queue } = (await musicClient.playSong(member.voice.channel, query)) as InfoToCommand;
+
+            if (isPlaying) {
+                interaction.reply({
+                    embeds: [musicQueue(song, queue, interaction)]
+                });
+                return;
+            }
+
+            const reply = await interaction.reply({
+                embeds: [musicInfo({ song, queue }, interaction, 'play')],
+                components: [playGroupButton]
+            });
+
+            const collector = reply.createMessageComponentCollector({
+                componentType: ComponentType.Button
+            });
+
+            collector.on('collect', (interactionCollector: MessageComponentInteraction) => {
+                handleButtonAction({ song, queue }, client, interaction, interactionCollector);
+            });
 
         } catch (error: any) {
             switch (error.constructor) {
@@ -49,21 +76,6 @@ const playCommand: ICommand = {
             }
             return;
         }
-        // End Query + music        
-
-        const reply = await interaction.reply({
-            embeds: [musicInfo(client, interaction, 'play')],
-            components: [playGroupButton]
-        });
-
-        // TODO: Refactor collector
-        const collector = reply.createMessageComponentCollector({
-            componentType: ComponentType.Button
-        });
-
-        collector.on('collect', (interactionCollector: MessageComponentInteraction) => {
-            handleButtonAction(client, interaction, interactionCollector);
-        });
     }
 };
 

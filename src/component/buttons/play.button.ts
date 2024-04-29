@@ -5,6 +5,7 @@ import Button from "./button";
 import ExtendedClient from "../../client/extended-client.interface";
 import musicInfo from "../embed/music-info.embed";
 import playGroupButton from "./play-group.button";
+import { InfoToCommand } from "../../music/interfaces/music-interface";
 
 export default class PlayButton extends Button {
     constructor(
@@ -15,13 +16,13 @@ export default class PlayButton extends Button {
         super(customId, label, style);
     }
 
-    async execute(client: ExtendedClient, interaction: CommandInteraction, interactionCollector: MessageComponentInteraction): Promise<void> {
+    async execute(song: InfoToCommand, client: ExtendedClient, interaction: CommandInteraction, interactionCollector: MessageComponentInteraction): Promise<void> {
         musicClient.resumeSong();
 
         client.music?.set(MusicMemoryOptions.status, MusicMemoryStatusOptions.play);
 
         interactionCollector.update({
-            embeds: [musicInfo(client, interaction, 'play')],
+            embeds: [musicInfo(song, interactionCollector, 'play')],
             components: [playGroupButton]
         });
     }
