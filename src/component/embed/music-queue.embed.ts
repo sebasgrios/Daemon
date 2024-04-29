@@ -1,8 +1,10 @@
 import { CommandInteraction, EmbedBuilder, GuildMember } from "discord.js";
 import SongResultInterface from "../../music/interfaces/song-results.interface";
 import { getBestImage, getDurationSong } from "./utils";
+import { musicClient } from "../..";
 
-const musicQueue = (song: SongResultInterface, queue: SongResultInterface[], interaction: CommandInteraction) => {
+const musicQueue = (song: SongResultInterface, interaction: CommandInteraction) => {
+    const queue = musicClient.getQueueInfo();
     const member: GuildMember = (interaction.member as GuildMember);
 
     return new EmbedBuilder()
@@ -15,7 +17,7 @@ const musicQueue = (song: SongResultInterface, queue: SongResultInterface[], int
         })
         .setThumbnail(getBestImage(song.thumbnail))
         .addFields(
-            { name: 'Posición', value: `${queue.length + 1}`, inline: true },
+            { name: 'Posición', value: `${queue.length}`, inline: true },
             { name: 'Duración', value: `${getDurationSong(parseInt(song.duration))}`, inline: true }
         );
 };

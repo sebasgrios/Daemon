@@ -1,9 +1,9 @@
 import { ColorResolvable, CommandInteraction, EmbedBuilder, GuildMember, MessageComponentInteraction } from "discord.js";
-import { InfoToCommand } from "../../music/interfaces/music-interface";
 import { getBestImage, getDurationSong } from "./utils";
+import SongResultInterface from "../../music/interfaces/song-results.interface";
 
 const getColorByStatus = (status: string): ColorResolvable => {
-    if (status === 'play') {
+    if (status === 'play' || status === 'resume') {
         return 'Green';
     }
 
@@ -23,11 +23,14 @@ const getStatus = (status: string): string => {
         return 'pausó';
     }
 
+    if (status === 'resume') {
+        return 'reanudó';
+    }
+
     return '';
 };
 
-const musicInfo = (songData: InfoToCommand, interaction: CommandInteraction | MessageComponentInteraction, status: string): EmbedBuilder => {
-    const { song, queue } = songData;
+const musicInfo = (song: SongResultInterface, interaction: CommandInteraction | MessageComponentInteraction, status: string): EmbedBuilder => {
     const member: GuildMember = (interaction.member as GuildMember);
 
     return new EmbedBuilder()

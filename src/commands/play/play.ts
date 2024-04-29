@@ -1,13 +1,13 @@
 import { Client, CommandInteraction, CommandInteractionOptionResolver, ComponentType, GuildMember, MessageComponentInteraction, SlashCommandBuilder, SlashCommandStringOption } from "discord.js";
-import ICommand from "../../interfaces/command.interface";
-import error from "../../component/embed/error.embed";
-import musicInfo from "../../component/embed/music-info.embed";
-import playGroupButton from "../../component/buttons/play-group.button";
 import { handleButtonAction } from "../../component/buttons/handlers/button.handler";
-import { musicClient } from "../..";
-import SongNotFoundException from "../../music/apis/exceptions/song-not-found.exception";
 import { InfoToCommand } from "../../music/interfaces/music-interface";
+import { musicClient } from "../..";
+import error from "../../component/embed/error.embed";
+import ICommand from "../../interfaces/command.interface";
+import musicInfo from "../../component/embed/music-info.embed";
 import musicQueue from "../../component/embed/music-queue.embed";
+import playGroupButton from "../../component/buttons/play-group.button";
+import SongNotFoundException from "../../music/apis/exceptions/song-not-found.exception";
 
 const playCommand: ICommand = {
     data: new SlashCommandBuilder()
@@ -42,17 +42,17 @@ const playCommand: ICommand = {
         }
 
         try {
-            const { song, queue } = (await musicClient.playSong(member.voice.channel, query)) as InfoToCommand;
+            const { song } = (await musicClient.playSong(member.voice.channel, query)) as InfoToCommand;
 
             if (isPlaying) {
                 interaction.reply({
-                    embeds: [musicQueue(song, queue, interaction)]
+                    embeds: [musicQueue(song, interaction)]
                 });
                 return;
             }
 
             const reply = await interaction.reply({
-                embeds: [musicInfo({ song, queue }, interaction, 'play')],
+                embeds: [musicInfo(song, interaction, 'play')],
                 components: [playGroupButton]
             });
 
@@ -61,7 +61,7 @@ const playCommand: ICommand = {
             });
 
             collector.on('collect', (interactionCollector: MessageComponentInteraction) => {
-                handleButtonAction({ song, queue }, client, interaction, interactionCollector);
+                handleButtonAction(song, client, interaction, interactionCollector);
             });
 
         } catch (error: any) {

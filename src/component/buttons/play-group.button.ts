@@ -1,8 +1,8 @@
 import { ActionRowBuilder, ButtonBuilder } from "discord.js";
-import volumeDownButton from "./volume-down.button";
 import backButton from "./back.button";
 import pauseButton from "./pause.button";
 import skipButton from "./skip.button";
+import volumeDownButton from "./volume-down.button";
 import volumeUpButton from "./volume-up.button";
 
 export default new ActionRowBuilder<ButtonBuilder>()

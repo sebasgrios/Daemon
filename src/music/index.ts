@@ -33,6 +33,10 @@ export default class Music implements MusicInterface {
         return this.isPlaying;
     }
 
+    public getQueueInfo(): SongResultInterface[] {
+        return this.queueInfo;
+    }
+
     private async playNextSong(channel: VoiceBasedChannel) {
         if (this.queue.length === 0) {
             this.isPlaying = false
@@ -98,5 +102,11 @@ export default class Music implements MusicInterface {
 
     async resumeSong() {
         this.player.unpause();
+    }
+
+    async skipSong(channel: VoiceBasedChannel) {
+        this.player.stop();
+
+        this.playNextSong(channel);
     }
 }
