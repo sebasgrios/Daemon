@@ -2,6 +2,7 @@ import MusicProviders from '../../providers/music-providers';
 import ytdl from 'ytdl-core';
 import { ErrorHandler } from '../../../shared/error.handler';
 import YoutubeUrlFactory from './url-factory';
+import YoutubeModule from './youtube.module';
 
 export enum SearchElements {
     query = 'query',
@@ -13,30 +14,34 @@ export default class YoutubeHandler {
     private validUrl!: string
 
     constructor () {
-        this.musicProviders = new MusicProviders()
+        this.musicProviders = MusicProviders.musicProviders
     }
 
     async search(query: string) {
         try {
-            const youtube = this.musicProviders.musicProviders.youtube.youtube
+            const youtube: YoutubeModule = this.musicProviders.getProviders().youtube
             const searchString = /^(http(s)?:\/\/)?([\w-]+\.)+[\w-]+(\/[\w- ;,./?%&=]*)?$/i.test(query) ? query : `ytsearch:${query}`
             const isURL = /^(http(s)?:\/\/)?([\w-]+\.)+[\w-]+(\/[\w- ;,./?%&=]*)?$/i.test(searchString)
 
-            const videos = await youtube.searchVideos(searchString, 1)
-
-            console.log('IS URL', isURL)
-            console.log('SEARCH STRING', searchString)
-            console.log('VIDEOS', videos)
+            const videos = await youtube.getVideos(searchString)
             
-            if (!videos) {
-                new ErrorHandler('🎬 ', 'YOUTUBE-HANDLER', `No results found for ${query}`)
-                return null
+            if (!videos || !videos.length) {
+                new ErrorHandler('🎬 ', 'YOUTUBE-HANDLER', `No results found for ${query}`);
+                return null;
             }
+
+            const firstVideo = videos[0]; // First video found 
+            const videoId = firstVideo?.id?.videoId; //Id for first video found
+
+            if (!videoId) {
+                new ErrorHandler('🎬 ', 'YOUTUBE-HANDLER', `No valid video ID found for ${query}`);
+                return null;
+            }
+            
             if (!isURL) {
-                const urlFactory = new YoutubeUrlFactory(videos[0].id)
+                const urlFactory = new YoutubeUrlFactory(videoId)
                 this.validUrl= urlFactory.getUrl()
             }
-
 
             const basicInfo = await ytdl.getBasicInfo((isURL) ? searchString : this.validUrl)
 
@@ -55,6 +60,5 @@ export default class YoutubeHandler {
             return null;
         }
     }
-    
     
 }

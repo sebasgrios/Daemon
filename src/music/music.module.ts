@@ -1,6 +1,5 @@
 import Enmap from "enmap";
 import ExtendedClient from "../client/extended-client.interface";
-import MusicProviders from "./providers/music-providers";
 
 export enum MusicMemoryOptions {
     volume = 'volume',
@@ -23,7 +22,6 @@ export default class MusicModule {
         client.music = new Enmap({ name: 'music' })
         client.music.set(MusicMemoryOptions.volume, 50)
         client.music.set(MusicMemoryOptions.queue, [])
-        client.music.set(MusicMemoryOptions.providers, new MusicProviders().musicProviders.youtube.toString())
     }
 
     //GET

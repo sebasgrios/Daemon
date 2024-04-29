@@ -1,17 +1,24 @@
-// @ts-ignore
 import YoutubeModule from '../apis/youtube/youtube.module';
 
 export default class MusicProviders {
-    private readonly youtube: YoutubeModule
-    constructor() {
-        this.youtube = new YoutubeModule()
+    private static _instance: MusicProviders;
+    private readonly youtube: YoutubeModule;
+
+    private constructor() {
+        this.youtube = new YoutubeModule();
     }
 
-    get musicProviders() {
-        return {
-            youtube: this.youtube.client
+    static get musicProviders(): MusicProviders {
+        //Check if musicProviers is instantiated
+        if (!MusicProviders._instance) {
+            MusicProviders._instance = new MusicProviders();
         }
+        return MusicProviders._instance;
     }
 
-    
+    getProviders() {
+        return {
+            youtube: this.youtube
+        };
+    }
 }
