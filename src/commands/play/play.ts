@@ -6,6 +6,7 @@ import playGroupButton from "../../component/buttons/play-group.button";
 import { handleButtonAction } from "../../component/buttons/handlers/button.handler";
 import { musicClient } from "../..";
 import SongNotFoundException from "../../music/apis/exceptions/song-not-found.exception";
+import { InfoToCommand } from "../../music/interfaces/music-interface";
 
 const playCommand: ICommand = {
     data: new SlashCommandBuilder()
@@ -38,7 +39,8 @@ const playCommand: ICommand = {
         if (!query) return; // TODO: Respuesta del mensaje
 
         try {
-            await musicClient.playSong(member.voice.channel, query);
+            const {song, queue} = (await musicClient.playSong(member.voice.channel, query)) as InfoToCommand;
+
         } catch (error: any) {
             switch (error.constructor) {
                 case SongNotFoundException:

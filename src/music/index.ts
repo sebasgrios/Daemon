@@ -7,15 +7,17 @@ import {
     NoSubscriberBehavior,
 } from '@discordjs/voice'
 import { VoiceBasedChannel } from 'discord.js'
-import MusicInterface from './interfaces/music-interface'
+import MusicInterface, { InfoToCommand } from './interfaces/music-interface'
 import { ErrorHandler } from '../shared/error.handler'
 import YoutubeHandler from './apis/youtube/youtube';
 import ytdDiscord from 'ytdl-core-discord'
 import { Readable } from 'stream';
 import SongNotFoundException from './apis/exceptions/song-not-found.exception';
+import SongResultInterface from './interfaces/song-results.interface';;
 
 export default class Music implements MusicInterface {
     private queue: Readable[];
+    private queueInfo: SongResultInterface[] = []
     private isPlaying: boolean;
     private readonly youtubeHandler: YoutubeHandler;
     private player: any;
@@ -41,6 +43,8 @@ export default class Music implements MusicInterface {
 
         connection.subscribe(this.player);
 
+        this.queueInfo.shift()!;
+
         const resource = createAudioResource(this.queue.shift()!, {
             inputType: StreamType.Opus,
         });
@@ -57,11 +61,12 @@ export default class Music implements MusicInterface {
         });
     }
 
-    private async addToQueue(query: Readable) {
+    private async addToQueue(query: Readable, song: SongResultInterface) {
         this.queue.push(query)
+        this.queueInfo.push(song)
     }
 
-    async playSong(channel: VoiceBasedChannel, query: string) {
+    async playSong(channel: VoiceBasedChannel, query: string): Promise<InfoToCommand | SongNotFoundException> {
         const song = await this.youtubeHandler.search(query)
 
         if (!song) {
@@ -70,11 +75,16 @@ export default class Music implements MusicInterface {
 
         const stream = await ytdDiscord(song.url, { highWaterMark: 1 << 25 })
 
-        await this.addToQueue(stream)
+        await this.addToQueue(stream, song)
 
         if (!this.isPlaying) {
             this.isPlaying = true
             this.playNextSong(channel)
+        }
+
+        return {
+            song: song,
+            queue: this.queueInfo
         }
     }
 

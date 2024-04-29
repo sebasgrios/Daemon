@@ -10,7 +10,8 @@ export enum MusicMemoryOptions {
 
 export enum MusicMemoryStatusOptions {
     play = 'play',
-    pause = 'pause'
+    pause = 'pause',
+    stop = 'stop'
 };
 
 export default class MusicModule {
@@ -22,6 +23,7 @@ export default class MusicModule {
         client.music = new Enmap({ name: 'music' })
         client.music.set(MusicMemoryOptions.volume, 50)
         client.music.set(MusicMemoryOptions.queue, [])
+        client.music.set(MusicMemoryOptions.status, MusicMemoryStatusOptions.stop)
     }
 
     //GET

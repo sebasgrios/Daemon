@@ -49,7 +49,7 @@ export default class YoutubeHandler {
                 found_by: SearchElements.url,
                 url: basicInfo.videoDetails.video_url,
                 title: basicInfo.videoDetails.title,
-                thumbnail: basicInfo.videoDetails.thumbnail,
+                thumbnail: basicInfo.videoDetails.thumbnail.thumbnails,
                 duration: basicInfo.videoDetails.lengthSeconds,
             }
 
