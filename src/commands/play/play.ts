@@ -5,6 +5,7 @@ import musicInfo from "../../component/embed/music-info.embed";
 import playGroupButton from "../../component/buttons/play-group.button";
 import { handleButtonAction } from "../../component/buttons/handlers/button.handler";
 import { musicClient } from "../..";
+import SongNotFoundException from "../../music/apis/exceptions/song-not-found.exception";
 
 const playCommand: ICommand = {
     data: new SlashCommandBuilder()
@@ -31,15 +32,28 @@ const playCommand: ICommand = {
             components: [playGroupButton]
         });
 
-        //Query + music
+        // Query + music
         const query: string | null = (interaction.options as CommandInteractionOptionResolver).getString('query');
 
-        if (!query) return; //TOD@ response message
+        if (!query) return; // TODO: Respuesta del mensaje
 
-        musicClient.playSong(member.voice.channel, query);
-        //End Query + music
-        
-        // TODO Refactor collector
+        try {
+            await musicClient.playSong(member.voice.channel, query);
+        } catch (error: any) {
+            switch (error.constructor) {
+                case SongNotFoundException:
+                    await interaction.followUp({ content: error.message, ephemeral: true });
+                    break;
+                default:
+                    console.error('Error reproduciendo la canción:', error);
+                    await interaction.followUp({ content: 'No se pudo reproducir la canción.', ephemeral: true });
+                    break;
+            }
+            return;
+        }
+        // End Query + music
+
+        // TODO: Refactor collector
         const collector = reply.createMessageComponentCollector({
             componentType: ComponentType.Button
         });
@@ -48,6 +62,8 @@ const playCommand: ICommand = {
             handleButtonAction(interactionCollector);
         });
     }
+
+
 };
 
 export default playCommand;
