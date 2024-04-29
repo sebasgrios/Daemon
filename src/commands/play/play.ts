@@ -35,12 +35,8 @@ const playCommand: ICommand = {
         if (!query) return; // TODO: Respuesta del mensaje
 
         try {
-<<<<<<< HEAD
-            const song = await musicClient.playSong(member.voice.channel, query);
-=======
-            const {song, queue} = (await musicClient.playSong(member.voice.channel, query)) as InfoToCommand;
+            const { song, queue } = (await musicClient.playSong(member.voice.channel, query)) as InfoToCommand;
 
->>>>>>> 8c0e7c3e26c8bc89bd7d524f4938c2e4c6c4dd7d
         } catch (error: any) {
             switch (error.constructor) {
                 case SongNotFoundException:
