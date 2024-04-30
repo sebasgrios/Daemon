@@ -1,6 +1,7 @@
 import { ColorResolvable, CommandInteraction, EmbedBuilder, GuildMember, MessageComponentInteraction } from "discord.js";
 import { getBestImage, getDurationSong } from "./utils";
 import SongResultInterface from "../../music/interfaces/song-results.interface";
+import defaultUserIcon from "../images/default-user-icon";
 
 const getColorByStatus = (status: string): ColorResolvable => {
     if (status === 'play' || status === 'resume') {
@@ -39,7 +40,7 @@ const musicInfo = (song: SongResultInterface, interaction: CommandInteraction | 
         .setURL(`${song.url}`)
         .setAuthor({
             name: `${member.nickname ?? interaction.user.username} ${getStatus(status)} la canción`,
-            iconURL: `${interaction.user.avatarURL()}`
+            iconURL: `${interaction.user.avatarURL() ?? defaultUserIcon}`
         })
         .setImage(getBestImage(song.thumbnail))
         .addFields(

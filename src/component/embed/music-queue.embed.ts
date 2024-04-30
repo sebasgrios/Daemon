@@ -2,6 +2,7 @@ import { CommandInteraction, EmbedBuilder, GuildMember } from "discord.js";
 import SongResultInterface from "../../music/interfaces/song-results.interface";
 import { getBestImage, getDurationSong } from "./utils";
 import { musicClient } from "../..";
+import defaultUserIcon from "../images/default-user-icon";
 
 const musicQueue = (song: SongResultInterface, interaction: CommandInteraction) => {
     const queue = musicClient.getQueueInfo();
@@ -13,7 +14,7 @@ const musicQueue = (song: SongResultInterface, interaction: CommandInteraction) 
         .setURL(`${song.url}`)
         .setAuthor({
             name: `${member.nickname ?? interaction.user.username} añadió una canción a la cola`,
-            iconURL: `${interaction.user.avatarURL()}`
+            iconURL: `${interaction.user.avatarURL() ?? defaultUserIcon}`
         })
         .setThumbnail(getBestImage(song.thumbnail))
         .addFields(
