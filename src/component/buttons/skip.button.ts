@@ -4,8 +4,8 @@ import { musicClient } from "../..";
 import Button from "./button";
 import musicInfo from "../embed/music-info.embed";
 import SongResultInterface from "../../music/interfaces/song-results.interface";
-import musicEnd from "../embed/music-end.embed";
 import playGroupButton from "./play-group.button";
+import musicSkip from "../embed/music-skip.embed";
 
 export default class SkipButton extends Button {
     constructor(
@@ -34,7 +34,7 @@ export default class SkipButton extends Button {
         }
 
         interaction.editReply({
-            embeds: [musicEnd(song, interaction)],
+            embeds: [musicSkip(song, interactionCollector)],
             components: []
         });
     }
