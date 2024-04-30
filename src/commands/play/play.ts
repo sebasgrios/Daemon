@@ -1,4 +1,4 @@
-import { Client, CommandInteraction, CommandInteractionOptionResolver, ComponentType, GuildMember, MessageComponentInteraction, SlashCommandBuilder, SlashCommandStringOption } from "discord.js";
+import { CommandInteraction, CommandInteractionOptionResolver, ComponentType, GuildMember, MessageComponentInteraction, SlashCommandBuilder, SlashCommandStringOption } from "discord.js";
 import playGroupButton from "../../component/buttons/play-group.button";
 import { handleButtonAction } from "../../component/buttons/handlers/button.handler";
 import { InfoToCommand } from "../../music/interfaces/music-interface";
@@ -19,7 +19,7 @@ const playCommand: ICommand = {
                 .setDescription('añade el nombre/url de la canción')
                 .setRequired(true)
         )),
-    run: async (client: Client, interaction: CommandInteraction) => {
+    run: async (interaction: CommandInteraction) => {
         const member: GuildMember = (interaction.member as GuildMember);
         const isPlaying = musicClient.getIsPlaying();
 
@@ -61,7 +61,7 @@ const playCommand: ICommand = {
             });
 
             collector.on('collect', (interactionCollector: MessageComponentInteraction) => {
-                handleButtonAction(song, client, interaction, interactionCollector);
+                handleButtonAction(song, interaction, interactionCollector);
             });
 
         } catch (error: any) {

@@ -6,7 +6,7 @@ const discordClient = new DiscordClient();
 export const musicClient = new Music();
 
 const start = async () => {
-    await discordClient.getClient(); // Get an unique client instance
+    await discordClient.login(); // Get an unique client instance
     await discordClient.loadCommands(); // Load all commands
     await discordClient.loadEvents(); // Load all events
 };

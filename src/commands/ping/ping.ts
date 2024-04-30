@@ -1,5 +1,6 @@
-import { Client, ColorResolvable, CommandInteraction, EmbedBuilder, SlashCommandBuilder } from 'discord.js';
+import { ColorResolvable, CommandInteraction, EmbedBuilder, SlashCommandBuilder } from 'discord.js';
 import ICommand from '../../interfaces/command.interface';
+import discordClient from '../..';
 
 const getColorByPing = (ping: number): ColorResolvable => {
     if (ping < 60) {
@@ -19,11 +20,11 @@ const pingCommand: ICommand = {
     data: new SlashCommandBuilder()
         .setName('ping')
         .setDescription('Muestra la latencia del servidor'),
-    run: async (client: Client, interaction: CommandInteraction) => {
+    run: async (interaction: CommandInteraction) => {
         const embed = new EmbedBuilder()
-            .setColor(getColorByPing(client.ws.ping))
+            .setColor(getColorByPing(discordClient.getClient().ws.ping))
             .setTitle('Latencia')
-            .setDescription(`La latencia de **${client.user?.username}** es de **${client.ws.ping}ms**`);
+            .setDescription(`La latencia de **${discordClient.getClient().user?.username}** es de **${discordClient.getClient().ws.ping}ms**`);
 
 
         interaction.reply({ embeds: [embed] });

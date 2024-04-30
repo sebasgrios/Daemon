@@ -21,7 +21,11 @@ export default class DiscordClient {
         new MusicModule(this.client)
     };
 
-    async getClient(): Promise<void> {
+    getClient() {
+        return this.client;
+    }
+
+    async login(): Promise<void> {
         console.clear();
         new InfoHandler('🤖', 'Client is connecting...', 'loading');
 
@@ -59,11 +63,11 @@ export default class DiscordClient {
                 events.forEach(event => {
                     if (event.data.once) {
                         this.client.once(event.data.name, (interaction: CommandInteraction) => {
-                            event.execute(this.client, interaction);
+                            event.execute(interaction);
                         });
                     } else {
                         this.client.on(event.data.name, (interaction: CommandInteraction) => {
-                            event.execute(this.client, interaction);
+                            event.execute(interaction);
                         });
                     }
                 });

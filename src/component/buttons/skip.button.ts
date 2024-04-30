@@ -2,7 +2,6 @@ import { ButtonStyle, CommandInteraction, GuildMember, MessageComponentInteracti
 import { isUserInVoiceChat } from "./utils";
 import { musicClient } from "../..";
 import Button from "./button";
-import ExtendedClient from "../../client/extended-client.interface";
 import musicInfo from "../embed/music-info.embed";
 import SongResultInterface from "../../music/interfaces/song-results.interface";
 import musicEnd from "../embed/music-end.embed";
@@ -17,7 +16,7 @@ export default class SkipButton extends Button {
         super(customId, label, style);
     }
 
-    async execute(song: SongResultInterface, client: ExtendedClient, interaction: CommandInteraction, interactionCollector: MessageComponentInteraction): Promise<void> {
+    async execute(song: SongResultInterface, interaction: CommandInteraction, interactionCollector: MessageComponentInteraction): Promise<void> {
         const member: GuildMember = (interaction.member as GuildMember);
 
         if (!isUserInVoiceChat(interaction) || !member.voice.channel) {

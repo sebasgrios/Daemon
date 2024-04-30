@@ -17,7 +17,7 @@ export default class VolumeDownButton extends Button {
         super(customId, label, style);
     }
 
-    async execute(song: SongResultInterface, client: ExtendedClient, interaction: CommandInteraction, interactionCollector: MessageComponentInteraction): Promise<void> {
+    async execute(song: SongResultInterface, interaction: CommandInteraction, interactionCollector: MessageComponentInteraction): Promise<void> {
         // interactionCollector.update({
         //     embeds: [musicInfo(client, interaction, 'pause')],
         //     components: [pauseGroupButton]
