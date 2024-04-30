@@ -38,7 +38,7 @@ const musicInfo = (song: SongResultInterface, interaction: CommandInteraction | 
         .setTitle(`${song.title}`)
         .setURL(`${song.url}`)
         .setAuthor({
-            name: `${member.nickname ?? interaction.user.username} ${getStatus(status)} una canción`,
+            name: `${member.nickname ?? interaction.user.username} ${getStatus(status)} la canción`,
             iconURL: `${interaction.user.avatarURL()}`
         })
         .setImage(getBestImage(song.thumbnail))

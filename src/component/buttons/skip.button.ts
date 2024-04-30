@@ -4,8 +4,9 @@ import { musicClient } from "../..";
 import Button from "./button";
 import ExtendedClient from "../../client/extended-client.interface";
 import musicInfo from "../embed/music-info.embed";
-import pauseGroupButton from "./pause-group.button";
 import SongResultInterface from "../../music/interfaces/song-results.interface";
+import musicEnd from "../embed/music-end.embed";
+import playGroupButton from "./play-group.button";
 
 export default class SkipButton extends Button {
     constructor(
@@ -17,17 +18,25 @@ export default class SkipButton extends Button {
     }
 
     async execute(song: SongResultInterface, client: ExtendedClient, interaction: CommandInteraction, interactionCollector: MessageComponentInteraction): Promise<void> {
-        const member: GuildMember = (interaction.member as GuildMember)
+        const member: GuildMember = (interaction.member as GuildMember);
 
         if (!isUserInVoiceChat(interaction) || !member.voice.channel) {
             return;
         }
+        const nextSong = musicClient.getQueueInfo()[0];
 
         musicClient.skipSong(member.voice.channel);
+        
+        if (nextSong) {
+            interaction.followUp({
+                embeds: [musicInfo(nextSong, interaction, 'play')],
+                components: [playGroupButton]
+            });
+        }
 
-        interaction.followUp({
-            embeds: [musicInfo(musicClient.getQueueInfo()[0], interaction, 'play')],
-            components: [pauseGroupButton]
+        interaction.editReply({
+            embeds: [musicEnd(song, interaction)],
+            components: []
         });
     }
 }

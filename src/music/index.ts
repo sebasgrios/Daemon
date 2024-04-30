@@ -5,15 +5,15 @@ import {
     StreamType,
     AudioPlayerStatus,
     NoSubscriberBehavior,
-} from '@discordjs/voice'
-import { VoiceBasedChannel } from 'discord.js'
-import MusicInterface, { InfoToCommand } from './interfaces/music-interface'
-import { ErrorHandler } from '../shared/error.handler'
+} from '@discordjs/voice';
+import { VoiceBasedChannel } from 'discord.js';
+import MusicInterface, { InfoToCommand } from './interfaces/music-interface';
+import { ErrorHandler } from '../shared/error.handler';
 import YoutubeHandler from './apis/youtube/youtube';
-import ytdDiscord from 'ytdl-core-discord'
+import ytdDiscord from 'ytdl-core-discord';
 import { Readable } from 'stream';
 import SongNotFoundException from './apis/exceptions/song-not-found.exception';
-import SongResultInterface from './interfaces/song-results.interface';;
+import SongResultInterface from './interfaces/song-results.interface';
 
 export default class Music implements MusicInterface {
     private queue: Readable[];
@@ -79,7 +79,7 @@ export default class Music implements MusicInterface {
 
         if (!song) {
             throw new SongNotFoundException(`No se ha encontrado la canción: \`${query}\``);
-        };    
+        };
 
         const stream = await ytdDiscord(song.url, { highWaterMark: 1 << 25 })
 

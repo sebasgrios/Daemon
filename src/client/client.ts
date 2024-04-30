@@ -1,4 +1,4 @@
-import { BaseInteraction, Client, Collection, CommandInteraction, DiscordAPIError, REST, Routes } from "discord.js";
+import { Client, Collection, CommandInteraction, DiscordAPIError, REST, Routes } from "discord.js";
 import providers from "../providers/bot-config.provider";
 import IBotConfigProvider from "../interfaces/bot-config.interface";
 import ICommand from "../interfaces/command.interface";
@@ -8,19 +8,16 @@ import { ErrorHandler } from "../shared/error.handler";
 import { InfoHandler } from "../shared/info.handler";
 import ExtendedClient from "./extended-client.interface";
 import MusicModule from "../music/music.module";
-import SongResultInterface from "../music/interfaces/song-results.interface";
 
 export default class DiscordClient {
     private client: ExtendedClient;
     private botConfigProvider: IBotConfigProvider;
     public commands: Collection<string, ICommand>;
-    public song: SongResultInterface | null;
 
     constructor() {
         this.client = new Client(providers.clientConfigProvider);
         this.botConfigProvider = providers.BotConfigProvider;
         this.commands = new Collection<string, ICommand>;
-        this.song = null;
         new MusicModule(this.client)
     };
 
