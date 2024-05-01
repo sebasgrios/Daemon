@@ -29,14 +29,6 @@ export default class Music implements MusicInterface {
         this.player = createAudioPlayer()
     }
 
-    public getIsPlaying(): boolean {
-        return this.isPlaying;
-    }
-
-    public getQueueInfo(): SongResultInterface[] {
-        return this.queueInfo;
-    }
-
     private async playNextSong(channel: VoiceBasedChannel) {
         if (this.queue.length === 0) {
             this.isPlaying = false

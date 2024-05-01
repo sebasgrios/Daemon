@@ -5,7 +5,9 @@ export enum MusicMemoryOptions {
     volume = 'volume',
     queue = 'queue',
     providers = 'providers',
-    status = 'status'
+    status = 'status',
+    currentInteractionSong = 'currentInteractionSong',
+    currentSong = 'currentSong'
 };
 
 export enum MusicMemoryStatusOptions {
@@ -24,6 +26,8 @@ export default class MusicModule {
         client.music.set(MusicMemoryOptions.volume, 50)
         client.music.set(MusicMemoryOptions.queue, [])
         client.music.set(MusicMemoryOptions.status, MusicMemoryStatusOptions.stop)
+        client.music.set(MusicMemoryOptions.currentInteractionSong, null)
+        client.music.set(MusicMemoryOptions.currentSong, null)
     }
 
     //GET

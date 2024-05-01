@@ -1,11 +1,12 @@
 import { ButtonStyle, CommandInteraction, GuildMember, MessageComponentInteraction } from "discord.js";
 import { isUserInVoiceChat } from "./utils";
-import { musicClient } from "../..";
+import discordClient, { musicClient } from "../..";
 import Button from "./button";
 import musicInfo from "../embed/music-info.embed";
 import SongResultInterface from "../../music/interfaces/song-results.interface";
 import playGroupButton from "./play-group.button";
 import musicSkip from "../embed/music-skip.embed";
+import { MusicMemoryOptions } from "../../music/music.module";
 
 export default class SkipButton extends Button {
     constructor(
@@ -22,11 +23,12 @@ export default class SkipButton extends Button {
         if (!isUserInVoiceChat(interaction) || !member.voice.channel) {
             return;
         }
-        const nextSong = musicClient.getQueueInfo()[0];
+        const nextSong = discordClient.getClient().music?.get(MusicMemoryOptions.queue);
 
         musicClient.skipSong(member.voice.channel);
         
         if (nextSong) {
+            // TODO not reply and create new interaction
             interaction.followUp({
                 embeds: [musicInfo(nextSong, interaction, 'play')],
                 components: [playGroupButton]

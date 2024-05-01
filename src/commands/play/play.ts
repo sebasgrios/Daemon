@@ -1,13 +1,14 @@
-import { CommandInteraction, CommandInteractionOptionResolver, ComponentType, GuildMember, MessageComponentInteraction, SlashCommandBuilder, SlashCommandStringOption } from "discord.js";
+import { CommandInteraction, CommandInteractionOptionResolver, ComponentType, GuildMember, SlashCommandBuilder, SlashCommandStringOption } from "discord.js";
 import playGroupButton from "../../component/buttons/play-group.button";
 import { InfoToCommand } from "../../music/interfaces/music-interface";
-import { musicClient } from "../..";
+import discordClient, { musicClient } from "../..";
 import error from "../../component/embed/error.embed";
 import ICommand from "../../interfaces/command.interface";
 import musicInfo from "../../component/embed/music-info.embed";
 import musicQueue from "../../component/embed/music-queue.embed";
 import SongNotFoundException from "../../music/apis/exceptions/song-not-found.exception";
 import ButtonCollector from "../../collector/button/button.collector";
+import { MusicMemoryOptions } from "../../music/music.module";
 
 const playCommand: ICommand = {
     data: new SlashCommandBuilder()
@@ -21,7 +22,7 @@ const playCommand: ICommand = {
         )),
     run: async (interaction: CommandInteraction) => {
         const member: GuildMember = (interaction.member as GuildMember);
-        const isPlaying = musicClient.getIsPlaying();
+        const currentSong = discordClient.getClient().music?.get(MusicMemoryOptions.currentSong);
 
         if (!member.voice.channel) {
             interaction.reply({
@@ -44,12 +45,14 @@ const playCommand: ICommand = {
         try {
             const { song } = (await musicClient.playSong(member.voice.channel, query)) as InfoToCommand;
 
-            if (isPlaying) {
+            if (currentSong) {
                 interaction.reply({
                     embeds: [musicQueue(song, interaction)]
                 });
                 return;
             }
+
+            discordClient.getClient().music?.set(MusicMemoryOptions.currentSong, song);
 
             const reply = await interaction.reply({
                 embeds: [musicInfo(song, interaction, 'play')],
