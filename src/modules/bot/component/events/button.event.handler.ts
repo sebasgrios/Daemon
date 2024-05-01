@@ -1,5 +1,5 @@
+import { MusicMemoryOptions } from "../../../music/music.module";
 import ExtendedClient from "../../client/extended-client.interface";
-import { MusicMemoryOptions } from "../../../../music/music.module";
 import Button from "../buttons/button";
 
 // TOD@ instance class 
