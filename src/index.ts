@@ -1,38 +1,28 @@
-import DiscordClient from "./client/client";
-import ExtendedClient from "./client/extended-client.interface";
-import Music from "./music";
-import MusicModule from "./music/music.module";
-import { ErrorHandler } from "./shared/error.handler";
+import ExtendedClient from "./modules/bot/client/extended-client.interface";
+import MainModule from "./modules/main.module";
+import Music from "./modules/music";
 
-export default class Bot {
-    private readonly discordClient: DiscordClient
+export default class Main {
+    private readonly mainModule: MainModule
 
-    constructor ( ) {
-        this.discordClient = new DiscordClient()
-    }
-
-    async start () {
-        try {
-            await this.discordClient.login()
-            await this.discordClient.loadCommands()
-            await this.discordClient.loadEvents()
-        } catch (error) {
-            new ErrorHandler('🤖', 'There was an error starting the bot', error)
-        }
+    constructor() {
+        this.mainModule = new MainModule()
     }
 
     getDiscordClient(): ExtendedClient {
-        return this.discordClient.getClient()
+        const botModule = this.mainModule.allModules.botModule
+        return botModule.botModuleProviders.discordClient
     }
 
     getMusicClient(): Music {
-        const discordClient = this.getDiscordClient()
-        return new MusicModule(discordClient).music
+        const musicModule = this.mainModule.allModules.musiscModule
+        const musicClient = musicModule.musicModuleProviders.musicClient
+
+        return musicClient
     }
 }
 
-const bot = new Bot()
-bot.start()
+const bot = new Main()
 
 const discordClient = bot.getDiscordClient()
 const musicClient = bot.getMusicClient()
@@ -41,5 +31,3 @@ export {
     discordClient,
     musicClient
 }
-
-//TOD@ all exports & always extended client
