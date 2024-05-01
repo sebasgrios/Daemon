@@ -10,7 +10,7 @@ export const getFilesByDir = async (folderName: string): Promise<any[]> => {
     const __fileName = fileURLToPath(import.meta.url);
     const __dirname = dirname(__fileName)
     const files = readdirSync(
-        join(__dirname, `../${folderName}`),
+        join(__dirname, `../client/${folderName}`),
         { withFileTypes: true, recursive: true }
     )
         .filter(file => !file.isDirectory());

@@ -1,7 +1,8 @@
 import { ColorResolvable, CommandInteraction, EmbedBuilder, GuildMember, MessageComponentInteraction } from "discord.js";
+
 import { getBestImage, getDurationSong } from "./utils";
-import SongResultInterface from "../../../../music/interfaces/song-results.interface";
 import defaultUserIcon from "../images/default-user-icon";
+import SongResultInterface from "../../../music/interfaces/song-results.interface";
 
 const getColorByStatus = (status: string): ColorResolvable => {
     if (status === 'play' || status === 'resume') {

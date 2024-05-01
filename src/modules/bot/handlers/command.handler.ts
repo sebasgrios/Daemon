@@ -16,14 +16,3 @@ export default class CommandHandler {
         return collection;
     }
 }
-
-/*
-export const getCommands = async () : Promise<Collection<string, ICommand>> => {
-    const collection = new Collection<string, ICommand>();
-    const files = await getFilesByDir('commands');
-
-    files.forEach(file => collection.set(file.data.name, file));
-
-    return collection;
-};
-*/

@@ -61,12 +61,12 @@ export default class DiscordClient {
         try {
             events.forEach(event => {
                 if (event.data.once) {
-                    this.client.once(event.data.name, (interaction: CommandInteraction) => {
-                        event.execute(interaction);
+                    this.client.once(event.data.name, (interaction: any) => {
+                        event.execute(this.client, interaction);
                     });
                 } else {
-                    this.client.on(event.data.name, (interaction: CommandInteraction) => {
-                        event.execute(interaction);
+                    this.client.on(event.data.name, (interaction: any) => {
+                        event.execute(this.client, interaction);
                     });
                 }
             });

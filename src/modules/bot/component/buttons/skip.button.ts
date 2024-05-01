@@ -24,11 +24,12 @@ export default class SkipButton extends Button {
         if (!isUserInVoiceChat(interaction) || !member.voice.channel) {
             return;
         }
-        const nextSong = discordClient.music?.get(MusicMemoryOptions.queue);
-
+        
+        const nextSong = discordClient.music?.get(MusicMemoryOptions.queue)[0];
+        
         musicClient.skipSong(member.voice.channel);
         
-        // TOD@ delete this and do it in button event handler
+        // TOD@ do this in button event handler
         if (nextSong) {
             // TODO not reply and create new interaction
             interaction.followUp({

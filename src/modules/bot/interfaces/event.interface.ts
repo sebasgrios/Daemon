@@ -1,9 +1,10 @@
 import { CommandInteraction } from "discord.js";
+import ExtendedClient from "../client/extended-client.interface";
 
 export default interface IEvent {
     data: {
         name: string;
         once: boolean;
     };
-    execute: (interaction: CommandInteraction) => void;
+    execute: (client: ExtendedClient, interaction: CommandInteraction) => void;
 }

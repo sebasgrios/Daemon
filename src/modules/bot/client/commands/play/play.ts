@@ -1,15 +1,16 @@
 import { CommandInteraction, CommandInteractionOptionResolver, ComponentType, GuildMember, SlashCommandBuilder, SlashCommandStringOption } from "discord.js";
-import playGroupButton from "../../component/buttons/play-group.button";
+import playGroupButton from "../../../component/buttons/play-group.button";
 
-import { discordClient, musicClient}  from "../../../..";
-import error from "../../component/embed/error.embed";
-import ICommand from "../../interfaces/command.interface";
-import musicInfo from "../../component/embed/music-info.embed";
-import musicQueue from "../../component/embed/music-queue.embed";
-import ButtonCollector from "../../collector/button/button.collector";
-import { MusicMemoryOptions } from "../../../music/music.module";
-import { InfoToCommand } from "../../../music/interfaces/music-interface";
-import SongNotFoundException from "../../../music/apis/exceptions/song-not-found.exception";
+import { musicClient }  from "../../../../..";
+import error from "../../../component/embed/error.embed";
+import ICommand from "../../../interfaces/command.interface";
+import musicInfo from "../../../component/embed/music-info.embed";
+import musicQueue from "../../../component/embed/music-queue.embed";
+import ButtonCollector from "../../../collector/button/button.collector";
+import { MusicMemoryOptions } from "../../../../music/music.module";
+import { InfoToCommand } from "../../../../music/interfaces/music-interface";
+import SongNotFoundException from "../../../../music/apis/exceptions/song-not-found.exception";
+import ExtendedClient from "../../../client/extended-client.interface";
 
 const playCommand: ICommand = {
     data: new SlashCommandBuilder()
@@ -21,9 +22,9 @@ const playCommand: ICommand = {
                 .setDescription('añade el nombre/url de la canción')
                 .setRequired(true)
         )),
-    run: async (interaction: CommandInteraction) => {
+    run: async (client: ExtendedClient, interaction: CommandInteraction) => {
         const member: GuildMember = (interaction.member as GuildMember);
-        const currentSong = discordClient.music?.get(MusicMemoryOptions.currentSong);
+        const currentSong = client.music?.get(MusicMemoryOptions.currentSong);
 
         if (!member.voice.channel) {
             interaction.reply({
@@ -53,14 +54,14 @@ const playCommand: ICommand = {
                 return;
             }
 
-            discordClient.music?.set(MusicMemoryOptions.currentSong, song);
+            client.music?.set(MusicMemoryOptions.currentSong, song);
 
             const reply = await interaction.reply({
                 embeds: [musicInfo(song, interaction, 'play')],
                 components: [playGroupButton]
             });
 
-            new ButtonCollector(reply.createMessageComponentCollector({
+            new ButtonCollector(client, reply.createMessageComponentCollector({
                 componentType: ComponentType.Button
             })).startCollecting(song, interaction);
 
