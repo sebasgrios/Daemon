@@ -1,6 +1,7 @@
 import { ButtonStyle, CommandInteraction, MessageComponentInteraction } from "discord.js";
+
 import { isUserInVoiceChat } from "./utils";
-import discordClient, { musicClient } from "../..";
+import { discordClient, musicClient } from "../..";
 import { MusicMemoryOptions, MusicMemoryStatusOptions } from "../../music/music.module";
 import Button from "./button";
 import musicInfo from "../embed/music-info.embed";
@@ -23,7 +24,7 @@ export default class PauseButton extends Button {
         
         musicClient.pauseSong();
 
-        discordClient.getClient().music?.set(MusicMemoryOptions.status, MusicMemoryStatusOptions.pause);
+        discordClient.music?.set(MusicMemoryOptions.status, MusicMemoryStatusOptions.pause);
         
         interactionCollector.update({
             embeds: [musicInfo(song, interactionCollector, 'pause')],

@@ -1,6 +1,6 @@
 import { ButtonStyle, CommandInteraction, MessageComponentInteraction } from "discord.js";
 import { isUserInVoiceChat } from "./utils";
-import discordClient, { musicClient } from "../..";
+import { discordClient, musicClient } from "../..";
 import { MusicMemoryOptions, MusicMemoryStatusOptions } from "../../music/music.module";
 import Button from "./button";
 import musicInfo from "../embed/music-info.embed";
@@ -23,7 +23,7 @@ export default class PlayButton extends Button {
 
         musicClient.resumeSong();
 
-        discordClient.getClient().music?.set(MusicMemoryOptions.status, MusicMemoryStatusOptions.play);
+        discordClient.music?.set(MusicMemoryOptions.status, MusicMemoryStatusOptions.play);
 
         interactionCollector.update({
             embeds: [musicInfo(song, interactionCollector, 'resume')],

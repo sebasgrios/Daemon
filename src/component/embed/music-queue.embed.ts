@@ -1,12 +1,12 @@
 import { CommandInteraction, EmbedBuilder, GuildMember } from "discord.js";
 import SongResultInterface from "../../music/interfaces/song-results.interface";
 import { getBestImage, getDurationSong } from "./utils";
-import discordClient from "../..";
+import { discordClient, musicClient } from "../..";
 import defaultUserIcon from "../images/default-user-icon";
 import { MusicMemoryOptions } from "../../music/music.module";
 
 const musicQueue = (song: SongResultInterface, interaction: CommandInteraction) => {
-    const queue = discordClient.getClient().music?.get(MusicMemoryOptions.queue);
+    const queue = discordClient.music?.get(MusicMemoryOptions.queue);
     const member: GuildMember = (interaction.member as GuildMember);
 
     return new EmbedBuilder()

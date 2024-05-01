@@ -1,6 +1,6 @@
 import { Events, CommandInteraction } from "discord.js";
 import IEvent from "../../interfaces/event.interface";
-import discordClient from "../..";
+import { discordClient } from "../..";
 
 const interactionCreateEvent : IEvent = {
     data: {
@@ -8,7 +8,7 @@ const interactionCreateEvent : IEvent = {
         once: false,
     },
     execute (interaction: CommandInteraction) {
-        const command = discordClient.commands.get(interaction.commandName);
+        const command = discordClient.commands?.get(interaction.commandName);
 
         if (!command) return;
 

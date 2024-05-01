@@ -1,24 +1,20 @@
-import { Client, Collection, CommandInteraction, DiscordAPIError, REST, Routes } from "discord.js";
+import { Client, CommandInteraction, DiscordAPIError, REST, Routes } from "discord.js";
+
 import providers from "../providers/bot-config.provider";
 import IBotConfigProvider from "../interfaces/bot-config.interface";
-import ICommand from "../interfaces/command.interface";
 import { getCommands } from "../handlers/command.handler";
 import { getEvents } from "../handlers/event.handler";
 import { ErrorHandler } from "../shared/error.handler";
 import { InfoHandler } from "../shared/info.handler";
 import ExtendedClient from "./extended-client.interface";
-import MusicModule from "../music/music.module";
 
 export default class DiscordClient {
     private client: ExtendedClient;
     private botConfigProvider: IBotConfigProvider;
-    public commands: Collection<string, ICommand>;
 
     constructor() {
         this.client = new Client(providers.clientConfigProvider);
         this.botConfigProvider = providers.BotConfigProvider;
-        this.commands = new Collection<string, ICommand>;
-        new MusicModule(this.client)
     };
 
     getClient() {
@@ -39,7 +35,7 @@ export default class DiscordClient {
 
         await getCommands()
             .then(async commands => {
-                this.commands = commands;
+                this.client.commands = commands;
 
                 await new REST({ version: '10' })
                     .setToken(this.botConfigProvider.discordConfig.token)

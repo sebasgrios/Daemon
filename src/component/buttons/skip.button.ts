@@ -1,6 +1,7 @@
 import { ButtonStyle, CommandInteraction, GuildMember, MessageComponentInteraction } from "discord.js";
+
 import { isUserInVoiceChat } from "./utils";
-import discordClient, { musicClient } from "../..";
+import { discordClient, musicClient } from "../..";
 import Button from "./button";
 import musicInfo from "../embed/music-info.embed";
 import SongResultInterface from "../../music/interfaces/song-results.interface";
@@ -23,7 +24,7 @@ export default class SkipButton extends Button {
         if (!isUserInVoiceChat(interaction) || !member.voice.channel) {
             return;
         }
-        const nextSong = discordClient.getClient().music?.get(MusicMemoryOptions.queue);
+        const nextSong = discordClient.music?.get(MusicMemoryOptions.queue);
 
         musicClient.skipSong(member.voice.channel);
         
