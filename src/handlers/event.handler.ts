@@ -1,4 +1,5 @@
 import { Collection } from "discord.js";
+
 import IEvent from "../interfaces/event.interface";
 import { getFilesByDir } from "../utils/files-by-dir";
 

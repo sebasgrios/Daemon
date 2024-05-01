@@ -23,6 +23,7 @@ export default class PlayButton extends Button {
 
         musicClient.resumeSong();
 
+        // TOD@ delete this and do it in button event handler
         discordClient.music?.set(MusicMemoryOptions.status, MusicMemoryStatusOptions.play);
 
         interactionCollector.update({

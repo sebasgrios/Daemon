@@ -21,8 +21,34 @@ const buttonAction: IButtonAction = {
     'volume_up-button': (song: SongResultInterface, interaction: CommandInteraction, interactionCollector: MessageComponentInteraction) => new VolumeUpButton().execute(song, interaction, interactionCollector),
 };
 
-export const handleButtonAction = (song: SongResultInterface, interaction: CommandInteraction, interactionCollector: MessageComponentInteraction) => {
-    const action = buttonAction[interactionCollector.customId];
+export class ButtonActionHandler {
+    private song: SongResultInterface
+    private interaction: CommandInteraction
+    private interactionCollector: MessageComponentInteraction
 
-    action ? action(song, interaction, interactionCollector) : new ErrorHandler('▶️', 'There was an error trying to execute button action', 'buttonAction not found');
-}; 
+    constructor(
+        song: SongResultInterface, 
+        interaction: CommandInteraction, 
+        interactionCollector: MessageComponentInteraction
+    ) {
+        this.song = song;
+        this.interaction = interaction;
+        this.interactionCollector = interactionCollector;
+    }
+
+    execute() {
+        const action = buttonAction[this.interactionCollector.customId];
+        
+        if (!action) {
+            new ErrorHandler('▶️', 'There was an error trying to execute button action', 'buttonAction not found');
+        }
+
+        action(this.song, this.interaction, this.interactionCollector);
+    }
+}
+
+// export const handleButtonAction = (song: SongResultInterface, interaction: CommandInteraction, interactionCollector: MessageComponentInteraction) => {
+//     const action = buttonAction[interactionCollector.customId];
+
+//     action ? action(song, interaction, interactionCollector) : new ErrorHandler('▶️', 'There was an error trying to execute button action', 'buttonAction not found');
+// }; 

@@ -1,5 +1,5 @@
 import { ButtonInteraction, InteractionCollector, MessageComponentInteraction } from "discord.js";
-import { handleButtonAction } from "../../component/buttons/handlers/button.handler";
+import { ButtonActionHandler } from "../../component/buttons/handlers/button.handler";
 
 export default class ButtonCollector {
     private collector: InteractionCollector<ButtonInteraction>;
@@ -10,7 +10,7 @@ export default class ButtonCollector {
 
     startCollecting (song: any, interaction: any) {
         this.collector.on('collect', (interactionCollector: MessageComponentInteraction) => {
-            handleButtonAction(song, interaction, interactionCollector);
+            new ButtonActionHandler(song, interaction, interactionCollector).execute();
         });
     }
 }

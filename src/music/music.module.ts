@@ -8,8 +8,8 @@ export enum MusicMemoryOptions {
     queue = 'queue',
     providers = 'providers',
     status = 'status',
-    currentInteractionSong = 'currentInteractionSong',
-    currentSong = 'currentSong'
+    currentSong = 'currentSong',
+    interaction = 'interaction'
 };
 
 export enum MusicMemoryStatusOptions {
@@ -21,6 +21,7 @@ export enum MusicMemoryStatusOptions {
 export default class MusicModule {
     private musicClient: Music
     private musicEventHandler: MusicEventHandler
+    
     constructor (
         client: ExtendedClient
     ) {
@@ -30,8 +31,8 @@ export default class MusicModule {
         client.music.set(MusicMemoryOptions.volume, 50)
         client.music.set(MusicMemoryOptions.queue, [])
         client.music.set(MusicMemoryOptions.status, MusicMemoryStatusOptions.stop)
-        client.music.set(MusicMemoryOptions.currentInteractionSong, null)
         client.music.set(MusicMemoryOptions.currentSong, null)
+        client.music.set(MusicMemoryOptions.interaction, null)
     }
 
     get music(): Music {

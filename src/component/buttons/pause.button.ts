@@ -24,6 +24,7 @@ export default class PauseButton extends Button {
         
         musicClient.pauseSong();
 
+        // TOD@ delete this and do it in button event handler
         discordClient.music?.set(MusicMemoryOptions.status, MusicMemoryStatusOptions.pause);
         
         interactionCollector.update({

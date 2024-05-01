@@ -28,6 +28,7 @@ export default class SkipButton extends Button {
 
         musicClient.skipSong(member.voice.channel);
         
+        // TOD@ delete this and do it in button event handler
         if (nextSong) {
             // TODO not reply and create new interaction
             interaction.followUp({
