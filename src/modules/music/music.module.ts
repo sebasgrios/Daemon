@@ -20,13 +20,12 @@ export enum MusicMemoryStatusOptions {
 
 export default class MusicModule {
     private musicClient: Music
-    private musicEventHandler: MusicEventHandler
     
     constructor (
         client: ExtendedClient
     ) {
         this.musicClient = new Music()
-        this.musicEventHandler = new MusicEventHandler(this.musicClient, client)
+        new MusicEventHandler(this.musicClient, client)
         client.music = new Enmap({ name: 'music' })
         client.music.set(MusicMemoryOptions.volume, 50)
         client.music.set(MusicMemoryOptions.queue, [])
