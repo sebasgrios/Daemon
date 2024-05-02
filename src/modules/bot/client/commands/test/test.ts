@@ -1,8 +1,9 @@
-import { CommandInteraction, EmbedBuilder, SlashCommandBuilder } from "discord.js";
+import { ActionRowBuilder, ButtonBuilder, CommandInteraction, EmbedBuilder, SlashCommandBuilder } from "discord.js";
 
 import ICommand from "../../../interfaces/command.interface";
 import ExtendedClient from "../../extended-client.interface";
 import playGroupButton from "../../../component/buttons/resume-group.button";
+import testButton from "../../buttons/test/test";
 
 const testCommand: ICommand = {
     data: new SlashCommandBuilder()
@@ -14,8 +15,11 @@ const testCommand: ICommand = {
             .setTitle('Latencia')
             .setDescription(`La latencia de **${client.user?.username}** es de **${client.ws.ping}ms**`);
 
-
-        interaction.reply({ embeds: [embed], components:[playGroupButton] });
+        const buttons = new ActionRowBuilder<ButtonBuilder>()
+            .addComponents(
+                testButton.data
+            )
+        interaction.reply({ embeds: [embed], components:[buttons] });
     }
 };
 

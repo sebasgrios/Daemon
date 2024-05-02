@@ -7,10 +7,12 @@ import IEventType from "../interfaces/event-type.interface";
 import ExtendedClient from "../client/extended-client.interface";
 import { ErrorHandler } from "../../../shared/error.handler";
 import IMusicInteractions from "../interfaces/music-interaction.interface";
-import { ButtonActionHandler } from "../component/buttons/handlers/button.handler";
+import { ButtonActionHandler } from "./button.handler";
+import CommandHandler from "./command.handler";
 
 export default class EventHandler extends EventEmitter {
     private client: ExtendedClient;
+    private commandHandler: CommandHandler;
     private buttonHandler: ButtonActionHandler;
     private eventType: IEventType = {
         'interactionCreate': (interaction: any) => this.interactionCreateEvent(interaction),
@@ -23,10 +25,13 @@ export default class EventHandler extends EventEmitter {
         'resume-button': (interaction: CommandInteraction | ButtonInteraction) => this.emit('resume-song', { interaction })
     }
 
-    constructor(client: ExtendedClient) {
+    constructor(client: ExtendedClient, commandHandler: CommandHandler) {
         super();
         this.client = client;
+        this.commandHandler = commandHandler;
         this.buttonHandler = new ButtonActionHandler(this.client);
+
+        this.buttonHandler.getButtonsFromFiles();
     }
 
     async getEventsFromFiles(): Promise<Collection<string, IEvent>> {
@@ -53,7 +58,14 @@ export default class EventHandler extends EventEmitter {
             const commandMusic = this.musicInteractions[interaction.commandName];
 
             if (!commandMusic) {
-                new ErrorHandler('🤖', 'There was an error trying to execute a command', `'${interaction.commandName}' wasnt found in musicInteractions`);
+                const command = this.commandHandler.getCommands().get(interaction.commandName);
+
+                if (!command) {
+                    new ErrorHandler('🤖', 'There was an error trying to execute a command', `'${interaction.commandName}' command run wasnt found`);
+                    return;
+                }
+
+                command?.run(this.client, interaction);
                 return;
             }
 
@@ -63,8 +75,15 @@ export default class EventHandler extends EventEmitter {
         if (interaction instanceof ButtonInteraction) {
             const buttonMusic = this.musicInteractions[interaction.customId];
 
-            if (!buttonMusic) {
-                new ErrorHandler('🤖', 'There was an error trying to execute a button', `'${interaction.customId}' wasnt found in musicInteractions`);
+            if (!buttonMusic) {                
+                const button = this.buttonHandler.getButtons().get(interaction.customId);
+
+                if (!button) {
+                    new ErrorHandler('🤖', 'There was an error trying to execute a command', `'${interaction.customId}' command run wasnt found`);
+                    return;
+                }
+
+                button?.run(this.client, interaction);
                 return;
             }
 

@@ -19,7 +19,7 @@ export default class DiscordClient {
         this.client = new Client(providers.clientConfigProvider);
         this.botConfigProvider = providers.BotConfigProvider;
         this.commandHandler = new CommandHandler();
-        this.eventHandler = new EventHandler(this.client);
+        this.eventHandler = new EventHandler(this.client, this.commandHandler);
         new InteractionHandler(this.eventHandler, this.client);
     };
 
@@ -40,8 +40,6 @@ export default class DiscordClient {
         new InfoHandler('🤖', 'Commands are loading...', 'loading');
 
         const commands = await this.commandHandler.getCommandsFromFiles();
-
-        this.client.commands = commands;
 
         await new REST({ version: '10' })
             .setToken(this.botConfigProvider.discordConfig.token)
