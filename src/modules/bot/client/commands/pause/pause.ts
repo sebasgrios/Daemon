@@ -10,8 +10,8 @@ const pauseCommand: ICommand = {
         .setDescription('Para la música'),
     run: async (client: ExtendedClient, interaction: CommandInteraction) => {
         interaction.reply({
-            embeds: [error('This command mustn\'t run this')]
-        })
+            embeds: [error(`You mustn't look this ${interaction.commandName} interaction`)]
+        });
     }
 };
 

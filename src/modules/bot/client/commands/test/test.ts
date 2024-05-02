@@ -2,7 +2,7 @@ import { ActionRowBuilder, ButtonBuilder, CommandInteraction, EmbedBuilder, Slas
 
 import ICommand from "../../../interfaces/command.interface";
 import ExtendedClient from "../../extended-client.interface";
-import playGroupButton from "../../../component/buttons/resume-group.button";
+import playGroupButton from "../../../component/buttons/groups/resume-group.button";
 import testButton from "../../buttons/test/test";
 
 const testCommand: ICommand = {

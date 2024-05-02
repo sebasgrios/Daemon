@@ -4,11 +4,11 @@ import IButton from "../../../interfaces/button.interface";
 import ExtendedClient from "../../extended-client.interface";
 import error from "../../../component/embed/error.embed";
 
-const resumeButton: IButton = {
+const pauseButton: IButton = {
     data: new ButtonBuilder()
-        .setCustomId('resume-button')
-        .setLabel('▶️')
-        .setStyle(ButtonStyle.Success),
+        .setCustomId('pause-button')
+        .setLabel('⏸︎')
+        .setStyle(ButtonStyle.Danger),
     run: (client: ExtendedClient, interaction: ButtonInteraction) => {
         interaction.reply({
             embeds: [error(`You mustn't look this ${interaction.customId} interaction`)]
@@ -16,4 +16,4 @@ const resumeButton: IButton = {
     }
 }
 
-export default resumeButton;
+export default pauseButton;

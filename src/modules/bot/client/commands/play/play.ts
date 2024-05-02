@@ -1,5 +1,5 @@
 import { CommandInteraction, CommandInteractionOptionResolver, ComponentType, GuildMember, SlashCommandBuilder, SlashCommandStringOption } from "discord.js";
-import playGroupButton from "../../../component/buttons/resume-group.button";
+import playGroupButton from "../../../component/buttons/groups/resume-group.button";
 
 import { musicClient }  from "../../../../..";
 import error from "../../../component/embed/error.embed";
@@ -23,8 +23,8 @@ const playCommand: ICommand = {
         )),
     run: async (client: ExtendedClient, interaction: CommandInteraction) => {
         interaction.reply({
-            embeds: [error('This command mustn\'t run this')]
-        })
+            embeds: [error(`You mustn't look this ${interaction.commandName} interaction`)]
+        });
     }
 };
 

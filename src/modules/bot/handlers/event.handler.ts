@@ -79,7 +79,7 @@ export default class EventHandler extends EventEmitter {
                 const button = this.buttonHandler.getButtons().get(interaction.customId);
 
                 if (!button) {
-                    new ErrorHandler('🤖', 'There was an error trying to execute a command', `'${interaction.customId}' command run wasnt found`);
+                    new ErrorHandler('🤖', 'There was an error trying to execute a button', `'${interaction.customId}' button run wasnt found`);
                     return;
                 }
 

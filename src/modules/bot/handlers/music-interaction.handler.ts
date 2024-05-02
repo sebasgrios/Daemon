@@ -8,9 +8,9 @@ import { MusicMemoryOptions, MusicMemoryStatusOptions } from "../../music/music.
 import musicQueue from "../component/embed/music-queue.embed";
 import { InfoToCommand } from "../../music/interfaces/music-interface";
 import musicInfo from "../component/embed/music-info.embed";
-import resumeGroupButton from "../component/buttons/resume-group.button";
+import resumeGroupButton from "../component/buttons/groups/resume-group.button";
 import SongNotFoundException from "../../music/apis/exceptions/song-not-found.exception";
-import pauseGroupButton from "../component/buttons/pause-group.button";
+import pauseGroupButton from "../component/buttons/groups/pause-group.button";
 import musicSkip from "../component/embed/music-skip.embed";
 
 export default class MusicInteractionHandler {
