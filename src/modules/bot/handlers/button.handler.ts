@@ -5,7 +5,6 @@ import ExtendedClient from "../client/extended-client.interface";
 import IButton from "../interfaces/button.interface";
 import { getFilesByDir } from "../utils/files-by-dir";
 
-// TOD@A VER QUE HACER CON ESTO (PROBABLEMENTE ELIMINAR)
 export class ButtonActionHandler extends EventEmitter {
     private client: ExtendedClient
     private buttons: Collection<string, IButton>

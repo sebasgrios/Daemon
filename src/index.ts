@@ -1,4 +1,5 @@
 import ExtendedClient from "./modules/bot/client/extended-client.interface";
+import EmbedHandler from "./modules/bot/handlers/embed.handler";
 import MainModule from "./modules/main.module";
 import Music from "./modules/music";
 import MusicEventEmitter from "./modules/music/events/music.event.emitter";
@@ -13,6 +14,10 @@ export default class Main {
     getDiscordClient(): ExtendedClient {
         const botModule = this.mainModule.allModules.botModule
         return botModule.botModuleProviders.discordClient
+    }
+
+    getEmbedHandler(): EmbedHandler {
+        return this.mainModule.allModules.botModule.botModuleProviders.embedHandler
     }
 
     getMusicClient(): Music {
@@ -30,11 +35,13 @@ export default class Main {
 const bot = new Main()
 
 const discordClient = bot.getDiscordClient()
+const embedHandler = bot.getEmbedHandler()
 const musicClient = bot.getMusicClient()
 const musicEventEmitter = bot.getMusicEventEmitter()
 
 export {
     discordClient,
+    embedHandler,
     musicClient,
-    musicEventEmitter
+    musicEventEmitter,
 }

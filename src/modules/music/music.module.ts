@@ -34,7 +34,7 @@ export default class MusicModule {
         client.music.set(MusicMemoryOptions.status, MusicMemoryStatusOptions.stop)
         client.music.set(MusicMemoryOptions.currentSong, null)
         this.musicEventEmitter = new MusicEventEmitter()
-        new MusicInteractionEventHandler(this.musicEventEmitter)
+        new MusicInteractionEventHandler(this.musicEventEmitter, client)
     }
 
     get musicModuleProviders() {

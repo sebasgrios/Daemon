@@ -20,6 +20,8 @@ export default class EventHandler {
     };
     private musicInteractions: IMusicInteractions = {
         'play': (interaction: CommandInteraction | ButtonInteraction) => this.musicInteractionHandler.playSong(interaction as CommandInteraction),
+        'skip': (interaction: CommandInteraction | ButtonInteraction) => this.musicInteractionHandler.skipSong(interaction),
+        'skip-button': (interaction: CommandInteraction | ButtonInteraction) => this.musicInteractionHandler.skipSong(interaction),
         'pause': (interaction: CommandInteraction | ButtonInteraction) => this.musicInteractionHandler.pauseSong(interaction),
         'pause-button': (interaction: CommandInteraction | ButtonInteraction) => this.musicInteractionHandler.pauseSong(interaction),
         'resume': (interaction: CommandInteraction | ButtonInteraction) => this.musicInteractionHandler.resumeSong(interaction),

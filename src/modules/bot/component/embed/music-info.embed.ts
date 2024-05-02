@@ -3,36 +3,21 @@ import { ColorResolvable, CommandInteraction, EmbedBuilder, GuildMember, Message
 import { getBestImage, getDurationSong } from "./utils";
 import defaultUserIcon from "../images/default-user-icon";
 import SongResultInterface from "../../../music/interfaces/song-results.interface";
+import { StatusList } from "./status.types";
 
-const getColorByStatus = (status: string): ColorResolvable => {
-    if (status === 'play' || status === 'resume') {
+const getColorByStatus = (status: StatusList): ColorResolvable => {
+    if (status === StatusList.play || status === StatusList.resume) {
         return 'Green';
     }
 
-    if (status === 'pause') {
+    if (status === StatusList.pause) {
         return 'Red';
     }
 
     return 'Grey';
 }
 
-const getStatus = (status: string): string => {
-    if (status === 'play') {
-        return 'puso';
-    }
-
-    if (status === 'pause') {
-        return 'pausó';
-    }
-
-    if (status === 'resume') {
-        return 'reanudó';
-    }
-
-    return '';
-};
-
-const musicInfo = (song: SongResultInterface, interaction: CommandInteraction | MessageComponentInteraction, status: string): EmbedBuilder => {
+const musicInfo = (song: SongResultInterface, interaction: CommandInteraction | MessageComponentInteraction, status: StatusList): EmbedBuilder => {
     const member: GuildMember = (interaction.member as GuildMember);
 
     return new EmbedBuilder()
@@ -40,7 +25,7 @@ const musicInfo = (song: SongResultInterface, interaction: CommandInteraction | 
         .setTitle(`${song.title}`)
         .setURL(`${song.url}`)
         .setAuthor({
-            name: `${member.nickname ?? interaction.user.username} ${getStatus(status)} la canción`,
+            name: `${member.nickname ?? interaction.user.username} ${status} la canción`,
             iconURL: `${interaction.user.avatarURL() ?? defaultUserIcon}`
         })
         .setImage(getBestImage(song.thumbnail))
