@@ -1,6 +1,7 @@
 import ExtendedClient from "./modules/bot/client/extended-client.interface";
 import MainModule from "./modules/main.module";
 import Music from "./modules/music";
+import MusicEventEmitter from "./modules/music/events/music.event.emitter";
 
 export default class Main {
     private readonly mainModule: MainModule
@@ -20,14 +21,20 @@ export default class Main {
 
         return musicClient
     }
+
+    getMusicEventEmitter(): MusicEventEmitter {
+        return this.mainModule.allModules.musiscModule.musicModuleProviders.musicEventEmitter
+    }
 }
 
 const bot = new Main()
 
 const discordClient = bot.getDiscordClient()
 const musicClient = bot.getMusicClient()
+const musicEventEmitter = bot.getMusicEventEmitter()
 
 export {
     discordClient,
-    musicClient
+    musicClient,
+    musicEventEmitter
 }

@@ -1,8 +1,16 @@
+import { MusicEventsList } from "../../music/events/event.types";
+import MusicEventEmitter from "../../music/events/music.event.emitter";
+
 export default class MusicInteractionEventHandler {
 
-    constructor() {}
+    constructor(
+        musicEventEmitter: MusicEventEmitter
+    ) {
+        musicEventEmitter.on(MusicEventsList.playing_song, this.generateDjPanel.bind(this))
+    }
 
     generateDjPanel() {
+        console.log('HACE COSAS')
         /**
          * TOD@
          * coger de la cache si está reproduciendo una canción
