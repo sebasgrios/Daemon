@@ -15,7 +15,7 @@ import musicSkip from "../component/embed/music-skip.embed";
 
 export default class MusicInteractionHandler {
     private client: ExtendedClient;
-    private interactionDjPanel: CommandInteraction | null
+    private interactionDjPanel: CommandInteraction | null // TOD@ mover a MusicInteractionEventHandler 
 
     constructor(eventInstance: EventHandler, client: ExtendedClient) {
         eventInstance.on('play-song', this.playSong.bind(this));
@@ -27,6 +27,33 @@ export default class MusicInteractionHandler {
     }
 
     async playSong({ interaction }: { interaction: CommandInteraction }) {
+        // TOD@ descomentar cuando Hector incorporé la llamada de eventos a MusicInteractionEventHandler
+        /* 
+        const query: string | null = (interaction.options as CommandInteractionOptionResolver).getString('query');
+        const member: GuildMember = (interaction.member as GuildMember);
+
+        if (!member.voice.channel) {
+            interaction.deleteReply();
+
+            interaction.channel?.send({
+                embeds: [error('No estás en un canal de voz')]
+            });
+            return;
+        }
+
+        if (!query) {
+            interaction.deleteReply();
+
+            interaction.channel?.send({
+                embeds: [error('Falta el parámetro "query"')]
+            });
+            return;
+        }
+
+        await musicClient.playSong(member.voice.channel, query);
+        */
+
+
         const member: GuildMember = (interaction.member as GuildMember);
         const query: string | null = (interaction.options as CommandInteractionOptionResolver).getString('query');
         const currentSong = this.client.music?.get(MusicMemoryOptions.currentSong);
@@ -87,6 +114,11 @@ export default class MusicInteractionHandler {
     }
 
     async resumeSong({ interaction }: { interaction: CommandInteraction | ButtonInteraction }) {
+        // TOD@ descomentar cuando Hector incorporé la llamada de eventos a MusicInteractionEventHandler
+        /*
+        musicClient.resumeSong();
+        */
+
         const member: GuildMember = (interaction.member as GuildMember);
         const song = this.client.music?.get(MusicMemoryOptions.currentSong);
 
@@ -114,9 +146,12 @@ export default class MusicInteractionHandler {
         await interaction.deleteReply();
     }
 
-
-    // TOD@ REFACTOR - mirar que hacer con funcionalidad de los botones
     async pauseSong({ interaction }: { interaction: CommandInteraction | ButtonInteraction }) {
+        // TOD@ descomentar cuando Hector incorporé la llamada de eventos a MusicInteractionEventHandler
+        /*
+        musicClient.pauseSong();
+        */
+
         const member: GuildMember = (interaction.member as GuildMember);
         const song = this.client.music?.get(MusicMemoryOptions.currentSong);
 
@@ -140,8 +175,22 @@ export default class MusicInteractionHandler {
         await interaction.deleteReply();
     }
 
-    // TOD@ REFACTOR - mirar que hacer con funcionalidad de los botones
     async skipSong({ interaction }: { interaction: CommandInteraction | ButtonInteraction }) {
+        // TOD@ descomentar cuando Hector incorporé la llamada de eventos a MusicInteractionEventHandler
+        /*
+        const member: GuildMember = (interaction.member as GuildMember);
+
+        if (!member.voice.channel) {
+            interaction.reply({
+                embeds: [error('No estás en un canal de voz')],
+                ephemeral: true
+            });
+            return;
+        }
+
+        musicClient.skipSong(member.voice.channel);
+        */
+
         const member: GuildMember = (interaction.member as GuildMember);
         const song = this.client.music?.get(MusicMemoryOptions.currentSong);
 
@@ -176,4 +225,5 @@ export default class MusicInteractionHandler {
 
         await interaction.deleteReply();
     }
+
 }
