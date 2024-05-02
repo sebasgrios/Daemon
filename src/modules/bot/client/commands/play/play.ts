@@ -1,12 +1,11 @@
 import { CommandInteraction, CommandInteractionOptionResolver, ComponentType, GuildMember, SlashCommandBuilder, SlashCommandStringOption } from "discord.js";
-import playGroupButton from "../../../component/buttons/play-group.button";
+import playGroupButton from "../../../component/buttons/resume-group.button";
 
 import { musicClient }  from "../../../../..";
 import error from "../../../component/embed/error.embed";
 import ICommand from "../../../interfaces/command.interface";
 import musicInfo from "../../../component/embed/music-info.embed";
 import musicQueue from "../../../component/embed/music-queue.embed";
-import ButtonCollector from "../../../collector/button/button.collector";
 import { MusicMemoryOptions } from "../../../../music/music.module";
 import { InfoToCommand } from "../../../../music/interfaces/music-interface";
 import SongNotFoundException from "../../../../music/apis/exceptions/song-not-found.exception";
@@ -61,9 +60,7 @@ const playCommand: ICommand = {
                 components: [playGroupButton]
             });
 
-            new ButtonCollector(client, reply.createMessageComponentCollector({
-                componentType: ComponentType.Button
-            })).startCollecting(song, interaction);
+            // TOD@ save interaction of first play
 
         } catch (error: any) {
             switch (error.constructor) {

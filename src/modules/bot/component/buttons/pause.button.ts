@@ -1,4 +1,4 @@
-import { ButtonStyle, CommandInteraction, MessageComponentInteraction } from "discord.js";
+import { ButtonInteraction, ButtonStyle } from "discord.js";
 
 import { isUserInVoiceChat } from "./utils";
 import { discordClient, musicClient } from "../../../..";
@@ -17,7 +17,7 @@ export default class PauseButton extends Button {
         super(customId, label, style);
     }
 
-    async execute(song: SongResultInterface, interaction: CommandInteraction, interactionCollector: MessageComponentInteraction): Promise<void> {
+    async execute(song: SongResultInterface, interaction: ButtonInteraction, getGroupButton: any): Promise<void> {
         if (!isUserInVoiceChat(interaction)) {
             return;
         }
@@ -27,9 +27,16 @@ export default class PauseButton extends Button {
         // TOD@ delete this and do it in button event handler
         discordClient.music?.set(MusicMemoryOptions.status, MusicMemoryStatusOptions.pause);
         
-        interactionCollector.update({
-            embeds: [musicInfo(song, interactionCollector, 'pause')],
+        // TOD@ update interaction parent
+        interaction.update({
+            embeds: [musicInfo(song, interaction, 'pause')],
+            components: [getGroupButton('pause')]
+        });
+        /*
+        interactionParent.update({
+            embeds: [musicInfo(song, interaction, 'pause')],
             components: [pauseGroupButton]
         });
+        */
     }
 }

@@ -1,3 +1,6 @@
+import { ButtonInteraction } from "discord.js";
+import SongResultInterface from "../../../../music/interfaces/song-results.interface";
+
 export default interface IButtonAction {
-    [key: string]: () => void;
+    [key: string]: (song: SongResultInterface, interaction: ButtonInteraction) => void;
 }

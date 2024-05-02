@@ -2,7 +2,7 @@ import { CommandInteraction, EmbedBuilder, SlashCommandBuilder } from "discord.j
 
 import ICommand from "../../../interfaces/command.interface";
 import ExtendedClient from "../../extended-client.interface";
-import playGroupButton from "../../../component/buttons/play-group.button";
+import playGroupButton from "../../../component/buttons/resume-group.button";
 
 const testCommand: ICommand = {
     data: new SlashCommandBuilder()

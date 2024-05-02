@@ -1,4 +1,4 @@
-import { Client, CommandInteraction, DiscordAPIError, REST, Routes } from "discord.js";
+import { Client, DiscordAPIError, REST, Routes } from "discord.js";
 
 import providers from "../providers/bot-config.provider";
 import IBotConfigProvider from "../interfaces/bot-config.interface";
@@ -7,18 +7,20 @@ import { InfoHandler } from "../../../shared/info.handler";
 import ExtendedClient from "./extended-client.interface";
 import CommandHandler from "../handlers/command.handler";
 import EventHandler from "../handlers/event.handler";
+import InteractionHandler from "../handlers/music-interaction.handler";
 
 export default class DiscordClient {
     private client: ExtendedClient;
     private botConfigProvider: IBotConfigProvider;
-    private commandHandler: CommandHandler
-    private eventHandler: EventHandler
+    private commandHandler: CommandHandler;
+    private eventHandler: EventHandler;
 
     constructor() {
         this.client = new Client(providers.clientConfigProvider);
         this.botConfigProvider = providers.BotConfigProvider;
         this.commandHandler = new CommandHandler();
-        this.eventHandler = new EventHandler()
+        this.eventHandler = new EventHandler(this.client);
+        new InteractionHandler(this.eventHandler, this.client);
     };
 
     getClient() {
@@ -62,11 +64,13 @@ export default class DiscordClient {
             events.forEach(event => {
                 if (event.data.once) {
                     this.client.once(event.data.name, (interaction: any) => {
-                        event.execute(this.client, interaction);
+                        this.eventHandler.executeEvent(event.data.name, interaction)
+                        // event.execute(this.client, interaction);
                     });
                 } else {
                     this.client.on(event.data.name, (interaction: any) => {
-                        event.execute(this.client, interaction);
+                        this.eventHandler.executeEvent(event.data.name, interaction)
+                        // event.execute(this.client, interaction);
                     });
                 }
             });
