@@ -20,6 +20,7 @@ export default class MusicInteractionHandler {
     constructor(eventInstance: EventHandler, client: ExtendedClient) {
         eventInstance.on('play-song', this.playSong.bind(this));
         eventInstance.on('pause-song', this.pauseSong.bind(this));
+        eventInstance.on('resume-song', this.resumeSong.bind(this));
 
         this.client = client;
         this.interactionDjPanel = null;
@@ -30,19 +31,23 @@ export default class MusicInteractionHandler {
         const query: string | null = (interaction.options as CommandInteractionOptionResolver).getString('query');
         const currentSong = this.client.music?.get(MusicMemoryOptions.currentSong);
 
+        await interaction.deferReply();
+
         if (!member.voice.channel) {
-            interaction.reply({
-                embeds: [error('No estás en un canal de voz')],
-                ephemeral: true
+            interaction.deleteReply();
+
+            interaction.channel?.send({
+                embeds: [error('No estás en un canal de voz')]
             });
             return;
         }
 
 
         if (!query) {
-            interaction.reply({
-                embeds: [error('Falta el parámetro "query"')],
-                ephemeral: true
+            interaction.deleteReply();
+
+            interaction.channel?.send({
+                embeds: [error('Falta el parámetro "query"')]
             });
             return;
         }
@@ -52,7 +57,7 @@ export default class MusicInteractionHandler {
 
             if (currentSong) {
                 // TOD@ CREATE NEW TEMP MESSAGE WITH EPHEMERAL
-                interaction.reply({
+                await interaction.editReply({
                     embeds: [musicQueue(song, interaction)]
                 });
                 return;
@@ -60,7 +65,7 @@ export default class MusicInteractionHandler {
 
             this.client.music?.set(MusicMemoryOptions.currentSong, song);
 
-            interaction.reply({
+            await interaction.editReply({
                 embeds: [musicInfo(song, interaction, 'play')],
                 components: [resumeGroupButton]
             });
@@ -81,10 +86,41 @@ export default class MusicInteractionHandler {
         }
     }
 
-    // TOD@ REFACTOR - mirar que hacer con funcionalidad de los botones
-    pauseSong({ interaction }: { interaction: CommandInteraction | ButtonInteraction }) {
+    async resumeSong({ interaction }: { interaction: CommandInteraction | ButtonInteraction }) {
         const member: GuildMember = (interaction.member as GuildMember);
         const song = this.client.music?.get(MusicMemoryOptions.currentSong);
+
+        await interaction.deferReply({ ephemeral: true });
+
+        if (!member.voice.channel) {
+            interaction.reply({
+                embeds: [error('No estás en un canal de voz')],
+                ephemeral: true
+            });
+            return;
+        }
+
+        musicClient.resumeSong();
+
+        // TOD@ delete this and do it in button event handler
+        this.client.music?.set(MusicMemoryOptions.status, MusicMemoryStatusOptions.play);
+
+        // TOD@ update interaction parent
+        await this.interactionDjPanel?.editReply({
+            embeds: [musicInfo(song, interaction, 'resume')],
+            components: [resumeGroupButton]
+        });
+
+        await interaction.deleteReply();
+    }
+
+
+    // TOD@ REFACTOR - mirar que hacer con funcionalidad de los botones
+    async pauseSong({ interaction }: { interaction: CommandInteraction | ButtonInteraction }) {
+        const member: GuildMember = (interaction.member as GuildMember);
+        const song = this.client.music?.get(MusicMemoryOptions.currentSong);
+
+        await interaction.deferReply({ ephemeral: true });
 
         if (!member.voice.channel) {
             interaction.reply({
@@ -96,16 +132,20 @@ export default class MusicInteractionHandler {
 
         musicClient.pauseSong();
 
-        this.interactionDjPanel?.editReply({
+        await this.interactionDjPanel?.editReply({
             embeds: [musicInfo(song, interaction, 'pause')],
             components: [pauseGroupButton]
         });
+
+        await interaction.deleteReply();
     }
 
     // TOD@ REFACTOR - mirar que hacer con funcionalidad de los botones
-    skipSong({ interaction }: { interaction: CommandInteraction | ButtonInteraction }) {
+    async skipSong({ interaction }: { interaction: CommandInteraction | ButtonInteraction }) {
         const member: GuildMember = (interaction.member as GuildMember);
         const song = this.client.music?.get(MusicMemoryOptions.currentSong);
+
+        await interaction.deferReply({ ephemeral: true });
 
         if (!member.voice.channel) {
             interaction.reply({
@@ -133,5 +173,7 @@ export default class MusicInteractionHandler {
             embeds: [musicSkip(song, interaction)],
             components: []
         });
+
+        await interaction.deleteReply();
     }
 }

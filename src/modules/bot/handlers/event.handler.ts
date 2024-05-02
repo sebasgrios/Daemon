@@ -17,7 +17,10 @@ export default class EventHandler extends EventEmitter {
     };
     private musicInteractions: IMusicInteractions = {
         'play': (interaction: CommandInteraction | ButtonInteraction) => this.emit('play-song', { interaction }),
-        'pause-button': (interaction: CommandInteraction | ButtonInteraction) => this.emit('pause-song', { interaction })
+        'pause': (interaction: CommandInteraction | ButtonInteraction) => this.emit('pause-song', { interaction }),
+        'pause-button': (interaction: CommandInteraction | ButtonInteraction) => this.emit('pause-song', { interaction }),
+        'resume': (interaction: CommandInteraction | ButtonInteraction) => this.emit('resume-song', { interaction }),
+        'resume-button': (interaction: CommandInteraction | ButtonInteraction) => this.emit('resume-song', { interaction })
     }
 
     constructor(client: ExtendedClient) {
@@ -50,7 +53,7 @@ export default class EventHandler extends EventEmitter {
             const commandMusic = this.musicInteractions[interaction.commandName];
 
             if (!commandMusic) {
-                new ErrorHandler('🤖', 'There was an error trying to execute a command', 'musicInteractions not found')
+                new ErrorHandler('🤖', 'There was an error trying to execute a command', `'${interaction.commandName}' wasnt found in musicInteractions`);
                 return;
             }
 
@@ -61,7 +64,7 @@ export default class EventHandler extends EventEmitter {
             const buttonMusic = this.musicInteractions[interaction.customId];
 
             if (!buttonMusic) {
-                new ErrorHandler('🤖', 'There was an error trying to execute a button', 'musicInteractions not found')
+                new ErrorHandler('🤖', 'There was an error trying to execute a button', `'${interaction.customId}' wasnt found in musicInteractions`);
                 return;
             }
 

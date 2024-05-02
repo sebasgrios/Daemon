@@ -22,58 +22,9 @@ const playCommand: ICommand = {
                 .setRequired(true)
         )),
     run: async (client: ExtendedClient, interaction: CommandInteraction) => {
-        const member: GuildMember = (interaction.member as GuildMember);
-        const currentSong = client.music?.get(MusicMemoryOptions.currentSong);
-
-        if (!member.voice.channel) {
-            interaction.reply({
-                embeds: [error('No estás en un canal de voz')],
-                ephemeral: true
-            });
-            return;
-        }
-
-        const query: string | null = (interaction.options as CommandInteractionOptionResolver).getString('query');
-
-        if (!query) {
-            interaction.reply({
-                embeds: [error('Falta el parámetro "query"')],
-                ephemeral: true
-            });
-            return;
-        }
-
-        try {
-            const { song } = (await musicClient.playSong(member.voice.channel, query)) as InfoToCommand;
-
-            if (currentSong) {
-                interaction.reply({
-                    embeds: [musicQueue(song, interaction)]
-                });
-                return;
-            }
-
-            client.music?.set(MusicMemoryOptions.currentSong, song);
-
-            const reply = await interaction.reply({
-                embeds: [musicInfo(song, interaction, 'play')],
-                components: [playGroupButton]
-            });
-
-            // TOD@ save interaction of first play
-
-        } catch (error: any) {
-            switch (error.constructor) {
-                case SongNotFoundException:
-                    await interaction.followUp({ content: error.message, ephemeral: true });
-                    break;
-                default:
-                    console.error('Error reproduciendo la canción:', error);
-                    await interaction.followUp({ content: 'No se pudo reproducir la canción.', ephemeral: true });
-                    break;
-            }
-            return;
-        }
+        interaction.reply({
+            embeds: [error('This command mustn\'t run this')]
+        })
     }
 };
 

@@ -45,6 +45,7 @@ const musicInfo = (song: SongResultInterface, interaction: CommandInteraction | 
         })
         .setImage(getBestImage(song.thumbnail))
         .addFields(
+            // TOD@ changed to song.request_by
             { name: 'Solicitada por', value: `${member.nickname ?? interaction.user.username}`, inline: true },
             { name: 'Duración', value: `${getDurationSong(parseInt(song.duration))}`, inline: true }
         )
