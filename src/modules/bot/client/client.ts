@@ -7,20 +7,21 @@ import { InfoHandler } from "../../../shared/info.handler";
 import ExtendedClient from "./extended-client.interface";
 import CommandHandler from "../handlers/command.handler";
 import EventHandler from "../handlers/event.handler";
-import InteractionHandler from "../handlers/music-interaction.handler";
+import MusicInteractionHandler from "../handlers/music-interaction.handler";
 
 export default class DiscordClient {
     private client: ExtendedClient;
     private botConfigProvider: IBotConfigProvider;
     private commandHandler: CommandHandler;
     private eventHandler: EventHandler;
+    private musicInteractionHandler: MusicInteractionHandler
 
     constructor() {
         this.client = new Client(providers.clientConfigProvider);
         this.botConfigProvider = providers.BotConfigProvider;
         this.commandHandler = new CommandHandler();
-        this.eventHandler = new EventHandler(this.client, this.commandHandler);
-        new InteractionHandler(this.eventHandler, this.client);
+        this.musicInteractionHandler = new MusicInteractionHandler(this.client);
+        this.eventHandler = new EventHandler(this.client, this.commandHandler, this.musicInteractionHandler);
     };
 
     getClient() {

@@ -1,5 +1,4 @@
 import { ButtonInteraction, Collection, CommandInteraction } from "discord.js";
-import { EventEmitter } from "events";
 
 import IEvent from "../interfaces/event.interface";
 import { getFilesByDir } from "../utils/files-by-dir";
@@ -9,27 +8,29 @@ import { ErrorHandler } from "../../../shared/error.handler";
 import IMusicInteractions from "../interfaces/music-interaction.interface";
 import { ButtonActionHandler } from "./button.handler";
 import CommandHandler from "./command.handler";
+import MusicInteractionHandler from "./music-interaction.handler";
 
-export default class EventHandler extends EventEmitter {
+export default class EventHandler {
     private client: ExtendedClient;
     private commandHandler: CommandHandler;
+    private musicInteractionHandler: MusicInteractionHandler
     private buttonHandler: ButtonActionHandler;
     private eventType: IEventType = {
         'interactionCreate': (interaction: any) => this.interactionCreateEvent(interaction),
     };
     private musicInteractions: IMusicInteractions = {
-        'play': (interaction: CommandInteraction | ButtonInteraction) => this.emit('play-song', { interaction }),
-        'pause': (interaction: CommandInteraction | ButtonInteraction) => this.emit('pause-song', { interaction }),
-        'pause-button': (interaction: CommandInteraction | ButtonInteraction) => this.emit('pause-song', { interaction }),
-        'resume': (interaction: CommandInteraction | ButtonInteraction) => this.emit('resume-song', { interaction }),
-        'resume-button': (interaction: CommandInteraction | ButtonInteraction) => this.emit('resume-song', { interaction })
+        'play': (interaction: CommandInteraction | ButtonInteraction) => this.musicInteractionHandler.playSong(interaction as CommandInteraction),
+        'pause': (interaction: CommandInteraction | ButtonInteraction) => this.musicInteractionHandler.pauseSong(interaction),
+        'pause-button': (interaction: CommandInteraction | ButtonInteraction) => this.musicInteractionHandler.pauseSong(interaction),
+        'resume': (interaction: CommandInteraction | ButtonInteraction) => this.musicInteractionHandler.resumeSong(interaction),
+        'resume-button': (interaction: CommandInteraction | ButtonInteraction) => this.musicInteractionHandler.resumeSong(interaction)
     }
 
-    constructor(client: ExtendedClient, commandHandler: CommandHandler) {
-        super();
+    constructor(client: ExtendedClient, commandHandler: CommandHandler, musicInteractionHandler: MusicInteractionHandler) {
         this.client = client;
         this.commandHandler = commandHandler;
         this.buttonHandler = new ButtonActionHandler(this.client);
+        this.musicInteractionHandler = musicInteractionHandler;
 
         this.buttonHandler.getButtonsFromFiles();
     }

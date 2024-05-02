@@ -17,16 +17,12 @@ export default class MusicInteractionHandler {
     private client: ExtendedClient;
     private interactionDjPanel: CommandInteraction | null // TOD@ mover a MusicInteractionEventHandler 
 
-    constructor(eventInstance: EventHandler, client: ExtendedClient) {
-        eventInstance.on('play-song', this.playSong.bind(this));
-        eventInstance.on('pause-song', this.pauseSong.bind(this));
-        eventInstance.on('resume-song', this.resumeSong.bind(this));
-
+    constructor(client: ExtendedClient) {
         this.client = client;
         this.interactionDjPanel = null;
     }
 
-    async playSong({ interaction }: { interaction: CommandInteraction }) {
+    async playSong(interaction: CommandInteraction) {
         // TOD@ descomentar cuando Hector incorporé la llamada de eventos a MusicInteractionEventHandler
         /* 
         const query: string | null = (interaction.options as CommandInteractionOptionResolver).getString('query');
@@ -113,7 +109,7 @@ export default class MusicInteractionHandler {
         }
     }
 
-    async resumeSong({ interaction }: { interaction: CommandInteraction | ButtonInteraction }) {
+    async resumeSong(interaction: CommandInteraction | ButtonInteraction) {
         // TOD@ descomentar cuando Hector incorporé la llamada de eventos a MusicInteractionEventHandler
         /*
         musicClient.resumeSong();
@@ -146,7 +142,7 @@ export default class MusicInteractionHandler {
         await interaction.deleteReply();
     }
 
-    async pauseSong({ interaction }: { interaction: CommandInteraction | ButtonInteraction }) {
+    async pauseSong(interaction: CommandInteraction | ButtonInteraction) {
         // TOD@ descomentar cuando Hector incorporé la llamada de eventos a MusicInteractionEventHandler
         /*
         musicClient.pauseSong();
@@ -175,7 +171,7 @@ export default class MusicInteractionHandler {
         await interaction.deleteReply();
     }
 
-    async skipSong({ interaction }: { interaction: CommandInteraction | ButtonInteraction }) {
+    async skipSong(interaction: CommandInteraction | ButtonInteraction) {
         // TOD@ descomentar cuando Hector incorporé la llamada de eventos a MusicInteractionEventHandler
         /*
         const member: GuildMember = (interaction.member as GuildMember);
