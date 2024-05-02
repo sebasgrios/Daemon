@@ -13,12 +13,13 @@ import { EventEmitter } from 'events';
 import MusicInterface, { InfoToCommand } from './interfaces/music-interface';
 import YoutubeHandler from './apis/youtube/youtube';
 import SongNotFoundException from './apis/exceptions/song-not-found.exception';
-import SongResultInterface from './interfaces/song-results.interface';import { ErrorHandler } from '../../shared/error.handler';
-;
+import SongResultInterface from './interfaces/song-results.interface';
+import { ErrorHandler } from '../../shared/error.handler';
+import { MusicEventsList } from './events/event.types';
 
 export default class Music extends EventEmitter implements MusicInterface  {
     
-    private queue: Readable[];
+    private queue: Readable[]; //Extract Readables from memory getter
     private queueInfo: SongResultInterface[] = []
     private isPlaying: boolean;
     private readonly youtubeHandler: YoutubeHandler;
@@ -60,7 +61,7 @@ export default class Music extends EventEmitter implements MusicInterface  {
         
         this.player.on('error', (error: any) => {
             new ErrorHandler('[🎶]', 'Error cargando la canción', error)
-            this.emit('playing-error')
+            this.emit(MusicEventsList.playing_error)
             this.playNextSong(channel)
         });
         
@@ -85,7 +86,7 @@ export default class Music extends EventEmitter implements MusicInterface  {
         
         await this.addToQueue(stream, song)
         
-        this.emit('playing-song', { channel, song })
+        this.emit(MusicEventsList.play_song, { channel, song })
 
         if (!this.isPlaying) {
             this.isPlaying = true
@@ -99,6 +100,7 @@ export default class Music extends EventEmitter implements MusicInterface  {
     }
 
     async pauseSong() {
+        this.emit(MusicEventsList.pause_song)
         this.player.pause();
     }
 
@@ -108,7 +110,7 @@ export default class Music extends EventEmitter implements MusicInterface  {
 
     async skipSong(channel: VoiceBasedChannel) {
         this.player.stop();
-
         this.playNextSong(channel);
+        this.emit(MusicEventsList.skip_song)
     }
 }

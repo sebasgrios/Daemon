@@ -2,14 +2,15 @@ import Enmap from "enmap";
 import Music from ".";
 import MusicEventHandler from "./events/music.event.handler";
 import ExtendedClient from "../bot/client/extended-client.interface";
+import MusicEventEmitter from "./events/music.event.emitter";
+import MusicInteractionEventHandler from "../bot/events/music-interaction.event.handler";
 
 export enum MusicMemoryOptions {
     volume = 'volume',
     queue = 'queue',
     providers = 'providers',
     status = 'status',
-    currentSong = 'currentSong',
-    interaction = 'interaction'
+    currentSong = 'currentSong'
 };
 
 export enum MusicMemoryStatusOptions {
@@ -20,6 +21,7 @@ export enum MusicMemoryStatusOptions {
 
 export default class MusicModule {
     private musicClient: Music
+    private musicEventEmitter: MusicEventEmitter
     
     constructor (
         client: ExtendedClient
@@ -31,12 +33,14 @@ export default class MusicModule {
         client.music.set(MusicMemoryOptions.queue, [])
         client.music.set(MusicMemoryOptions.status, MusicMemoryStatusOptions.stop)
         client.music.set(MusicMemoryOptions.currentSong, null)
-        client.music.set(MusicMemoryOptions.interaction, null)
+        this.musicEventEmitter = new MusicEventEmitter()
+        new MusicInteractionEventHandler(this.musicEventEmitter)
     }
 
     get musicModuleProviders() {
         return { 
-            musicClient: this.musicClient
+            musicClient: this.musicClient,
+            musicEventEmitter: this.musicEventEmitter
         }
     }
 
